@@ -93,3 +93,47 @@ export async function getSensorTableData() {
       : '',
   }));
 }
+
+/**
+ * Fetches all data sources and combines them into a single array
+ * suitable for the ticket table.
+ *
+ * @returns {Promise<Array>} Combined ticket table data
+ */
+export async function getTicketTableData() {
+  const [
+    tickets,
+    observatories,
+    observatoriesSensors,
+    sensors,
+    users,
+  ] = await Promise.all([
+    fetchJson('/tickets.json'),
+    fetchJson('/observatories.json'),
+    fetchJson('/observatories_sensors.json'),
+    fetchJson('/sensors.json'),
+    fetchJson('/users.json'),
+  ]);
+
+  // Create lookup maps for efficient joining
+  const obsMap = new Map(observatories.map(o => [o.oid, o.name]));
+  const obsSensorMap = new Map(observatoriesSensors.map(os => [os.oid, os.sid]));
+  const userMap = new Map(users.map(u => [u.uid, u.fullname]));
+  const sensorMap = new Map(sensors.map(s => [s.sid, s.status]));
+
+  return tickets.map(ticket => {
+    const sid = obsSensorMap.get(ticket.oid);
+    return {
+      tid: ticket.tid,
+      bridge: obsMap.get(ticket.oid) ?? '',
+      sensor: sid ?? '',
+      status: sid ? sensorMap.get(sid) ?? '' : '',
+      createdAt: ticket.created_at
+        ? new Date(ticket.created_at).toLocaleDateString()
+        : '',
+      createdBy: userMap.get(ticket.created_by) ?? '',
+      assignedTo: userMap.get(ticket.assigned_to) ?? '',
+      problem: ticket.problem ?? '',
+    };
+  });
+}

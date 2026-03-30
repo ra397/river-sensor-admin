@@ -1,4 +1,4 @@
-import {getObservatoryTableData, getSensorTableData} from "./getTableData.js";
+import {getObservatoryTableData, getSensorTableData, getTicketTableData} from "./getTableData.js";
 
 export const VIEWS = {
     observatories: {
@@ -55,6 +55,17 @@ export const VIEWS = {
         title: 'Tickets',
         action: { label: 'Create Ticket', handler: () => console.log('Create Ticket') },
         filters: {},
+        columns: [
+            {title: "#", field: "tid"},
+            {title: "Bridge", field: "bridge"},
+            {title: "Sensor", field: "sensor"},
+            {title: "Status", field: "status"},
+            {title: "Created at", field: "createdAt"},
+            {title: "Created by", field: "createdBy"},
+            {title: "Assigned to", field: "assignedTo"},
+            {title: "Problem", field: "problem"},
+        ],
+        getData: getTicketTableData(),
     },
 
     users: {
