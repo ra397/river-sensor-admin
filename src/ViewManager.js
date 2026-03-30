@@ -1,21 +1,21 @@
 import { VIEWS } from "./ViewConfig.js";
 import { enableSearch } from "./search.js";
 
-export const filterState = {
-    status: ["active", "defective", "retired", "suspended"],
-    rate: ['2', '3', '4', '5'],
-    firmware: ['0.6', '0.86', '0.88', '0.89', '0.90', '1.00', '1.01', '6.1'],
-    no_pckt_days: ["< 7", "7 - 14", "> 14"],
-    voltage: ["< 10", "10 - 11", "11 - 12", "12 - 13", "> 13"],
-};
-
-export const filterCounts = Object.fromEntries(
-    Object.entries(filterState).map(([key, vals]) => [key, vals.length])
-);
+const filterState = {};
+const filterCounts = {};
 
 export async function renderView(viewKey, permissions) {
     const view = VIEWS[viewKey];
     if (!view) return;
+
+    // reset current filter state
+    for (const key of Object.keys(filterState)) delete filterState[key];
+    for (const key of Object.keys(filterCounts)) delete filterCounts[key];
+
+    for (const [key, filter] of Object.entries(view.filters)) {
+        filterState[key] = [...filter.options];
+        filterCounts[key] = filter.options.length;
+    }
 
     // Set view title
     const titleEl = document.querySelector('.nav-title');
@@ -23,8 +23,9 @@ export async function renderView(viewKey, permissions) {
     titleEl.textContent = view.title;
 
     // Set view action btn
-    const actionBtnEl = document.querySelector('.nav-btn');
-    if (!actionBtnEl) return;
+    const oldActionBtnEl = document.querySelector('.nav-btn');
+    const actionBtnEl = oldActionBtnEl.cloneNode(true);
+    oldActionBtnEl.replaceWith(actionBtnEl);
     actionBtnEl.textContent = view.action.label;
     actionBtnEl.addEventListener('click', () => {
         view.action.handler();
@@ -51,6 +52,8 @@ export async function renderView(viewKey, permissions) {
     const usernameEl = document.querySelector('#user-name');
     if (!usernameEl) return;
     usernameEl.textContent = "PLACEHOLDER USERNAME";
+
+    const filterFunc = buildFilterFunc(view.filters);
 
     // Populate sidebar filters
     const filterGroupsContainerEl = document.querySelector('#filter-groups');
@@ -97,7 +100,6 @@ export async function renderView(viewKey, permissions) {
     // Populate table
     const data = await view.getData;
     renderTable(table, view.columns, data);
-    const filterFunc = buildFilterFunc(view.filters);
 
     // Enable search
     const searchInput = document.getElementById('search-input');
