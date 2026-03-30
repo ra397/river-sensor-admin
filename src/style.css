@@ -1,0 +1,13 @@
+@import url("css/navbar.css");
+@import url("css/sidebar.css");
+@import url("css/table.css");
+@import url("tabulator-tables/dist/css/tabulator.min.css");
+
+body {
+    height: 100%;
+}
+
+#main {
+    display: flex;
+    width: 100%;
+}

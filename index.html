@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/src/style.css" />
+    <title>RiverSensor Admin</title>
+  </head>
+  <body>
+    <nav id="navbar">
+        <div class="nav-left">
+            <span class="nav-title"></span>
+        </div>
+        <button id="nav-action-btn" class="nav-btn"></button>
+        <div class="nav-tabs"></div>
+        <div class="nav-right">
+            <span id="user-name"></span>
+            <a href="#" id="logout-link">Logout</a>
+        </div>
+    </nav>
+
+    <div id="main">
+        <div id="sidebar">
+            <div class="sidebar-section">
+                <label for="search-input"></label>
+                <input type="search" id="search-input" placeholder="Search...">
+            </div>
+
+            <div class="sidebar-section">
+                <label class="sidebar-heading">Filter</label>
+                <div id="filter-groups"></div>
+            </div>
+        </div>
+
+        <div id="table-container"></div>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

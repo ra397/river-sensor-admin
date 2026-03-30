@@ -1,0 +1,8 @@
+#table-container {
+    flex: 1;
+}
+
+.tabulator .tabulator-footer .tabulator-page.active {
+    color: black !important;
+    background: #ccc !important;
+}

@@ -1,0 +1,22 @@
+#navbar {
+    display: flex;
+    padding: 0.75rem 1.5rem;
+    justify-content: space-around;
+}
+
+.nav-tabs {
+    display: flex;
+    gap: 1rem;
+}
+
+.nav-tab {
+    all: unset;
+    color: blue;
+    cursor: pointer;
+}
+
+.nav-right {
+    display: flex;
+    gap: 1rem;
+}
+

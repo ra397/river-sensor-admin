@@ -1,0 +1,29 @@
+#sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+
+    flex: 0 0 200px;
+}
+
+.sidebar-heading {
+    font-size: 1.1em;
+    padding-bottom: 0.2em;
+}
+
+.sidebar-section {
+    display: flex;
+    flex-direction: column;
+}
+
+#filter-groups {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
