@@ -1,5 +1,7 @@
-export function enableSearch(searchInputEl, table) {
+export function enableSearch(oldSearchInputEl, table) {
     let debounceTimer;
+    const searchInputEl = oldSearchInputEl.cloneNode(true);
+    oldSearchInputEl.replaceWith(searchInputEl);
     searchInputEl.addEventListener('input', (e) => {
         clearTimeout(debounceTimer);
         debounceTimer = setTimeout(() => {
