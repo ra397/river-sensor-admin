@@ -4,11 +4,14 @@
     gap: 1em;
 
     flex: 0 0 200px;
+    padding-right: 0.5em;
 }
 
 .sidebar-heading {
     font-size: 1.1em;
-    padding-bottom: 0.2em;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 1em;
+    margin-right: 1em;
 }
 
 .sidebar-section {

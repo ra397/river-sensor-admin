@@ -2,6 +2,7 @@
 @import url("css/sidebar.css");
 @import url("css/table.css");
 @import url("tabulator-tables/dist/css/tabulator.min.css");
+@import url("css/search.css");
 
 body {
     height: 100%;
