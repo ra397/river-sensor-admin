@@ -2,7 +2,29 @@
     flex: 1;
 }
 
+#column-toggle-container {
+    display: flex;
+    justify-content: right;
+}
+
+.column-toggle {
+    color: var(--light-blue);
+    cursor: pointer;
+    user-select: none;
+}
+
+.column-toggle.hidden {
+    color: var(--light-gray);
+}
+
+.column-toggle:not(:first-child)::before {
+    content: "|";
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    color: var(--black);
+}
+
 .tabulator .tabulator-footer .tabulator-page.active {
-    color: black !important;
-    background: #ccc !important;
+    color: var(--black) !important;
+    background: var(--light-gray) !important;
 }

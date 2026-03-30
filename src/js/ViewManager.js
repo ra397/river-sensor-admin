@@ -107,6 +107,22 @@ export async function renderView(viewKey, permissions) {
     // Enable search
     const searchInput = document.getElementById('search-input');
     enableSearch(searchInput, table);
+
+    // Populate column toggle buttons
+    const toggleColumnContainerEl = document.querySelector('#column-toggle-container');
+    toggleColumnContainerEl.innerHTML = '';
+    for (const column of view.columns) {
+        const columnToggleBtn = document.createElement('span');
+        columnToggleBtn.className = 'column-toggle';
+        columnToggleBtn.textContent = column.title;
+
+        columnToggleBtn.addEventListener('click', () => {
+            table.toggleColumn(column.field);
+            columnToggleBtn.classList.toggle('hidden');
+        })
+
+        toggleColumnContainerEl.appendChild(columnToggleBtn);
+    }
 }
 
 function renderTable(table, columns, data) {

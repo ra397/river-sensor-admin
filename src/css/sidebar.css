@@ -9,7 +9,7 @@
 
 .sidebar-heading {
     font-size: 1.1em;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid var(--light-gray);
     margin-bottom: 1em;
     margin-right: 1em;
 }
