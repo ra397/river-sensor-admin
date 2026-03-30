@@ -27,3 +27,32 @@
     flex-direction: column;
     gap: 4px;
 }
+
+.filter-title {
+    display: flex;
+    justify-content: space-between;
+    cursor: pointer;
+}
+
+.chevron {
+    width: 16px;
+    height: 16px;
+    fill: none;
+    stroke: black;
+    stroke-width: 2;
+    transition: transform 0.2s;
+}
+
+.filter-group.open .chevron {
+    transform: rotate(90deg);
+}
+
+.filter-options {
+    display: none;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.filter-group.open .filter-options {
+    display: flex;
+}

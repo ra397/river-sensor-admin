@@ -64,10 +64,16 @@ export async function renderView(viewKey, permissions) {
         const filterGroupEl = document.createElement('div');
         filterGroupEl.className = 'filter-group';
 
-        const filterTitleEl = document.createElement('span');
+        const filterTitleEl = document.createElement('div');
         filterTitleEl.className = 'filter-title';
-        filterTitleEl.textContent = filter.label;
+        filterTitleEl.innerHTML = `<span>${filter.label}</span><svg class="chevron" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"></path></svg>`;
+        filterTitleEl.addEventListener('click', () => {
+            filterGroupEl.classList.toggle('open');
+        });
         filterGroupEl.appendChild(filterTitleEl);
+
+        const filterOptionsEl = document.createElement('div');
+        filterOptionsEl.className = 'filter-options';
 
         for (const option of filter.options) {
             const label = document.createElement('label');
@@ -92,8 +98,10 @@ export async function renderView(viewKey, permissions) {
             });
 
             label.append(checkbox, ' ', option);
-            filterGroupEl.append(label);
+            filterOptionsEl.append(label);
         }
+
+        filterGroupEl.appendChild(filterOptionsEl);
         filterGroupsContainerEl.appendChild(filterGroupEl);
     }
 
