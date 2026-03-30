@@ -17,11 +17,6 @@ export async function renderView(viewKey, permissions) {
         filterCounts[key] = filter.options.length;
     }
 
-    // Set view title
-    const titleEl = document.querySelector('.nav-title');
-    if (!titleEl) return;
-    titleEl.textContent = view.title;
-
     // Set view action btn
     const oldActionBtnEl = document.querySelector('.nav-btn');
     const actionBtnEl = oldActionBtnEl.cloneNode(true);

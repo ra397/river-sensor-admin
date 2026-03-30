@@ -1,4 +1,4 @@
-import { renderView } from "./ViewManager.js";
+import { renderView } from "./js/ViewManager.js";
 import { TabulatorFull as Tabulator } from "tabulator-tables";
 
 const table = new Tabulator("#table-container", {
