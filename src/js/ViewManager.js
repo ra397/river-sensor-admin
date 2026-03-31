@@ -1,78 +1,71 @@
+import {table} from "../main.js";
 import { VIEWS } from "./ViewConfig.js";
 import { enableSearch } from "./search.js";
 
+let currentView = null;
 const filterState = {};
 const filterCounts = {};
 
-export async function renderView(viewKey, permissions) {
-    const view = VIEWS[viewKey];
-    if (!view) return;
-
-    // reset current filter state
+function resetFilterState(filters) {
     for (const key of Object.keys(filterState)) delete filterState[key];
     for (const key of Object.keys(filterCounts)) delete filterCounts[key];
 
-    for (const [key, filter] of Object.entries(view.filters)) {
+    for (const [key, filter] of Object.entries(filters)) {
         filterState[key] = [...filter.options];
         filterCounts[key] = filter.options.length;
     }
+}
 
-    // Set view action btn
-    const oldActionBtnEl = document.querySelector('.nav-btn');
-    const actionBtnEl = oldActionBtnEl.cloneNode(true);
-    oldActionBtnEl.replaceWith(actionBtnEl);
-    actionBtnEl.textContent = view.action.label;
-    actionBtnEl.addEventListener('click', () => {
-        view.action.handler();
-    });
-
-    // Populate nav tabs
+function renderNavbar(viewKey) {
     const navTabsEl = document.querySelector('.nav-tabs');
-    navTabsEl.innerHTML = '';
     if (!navTabsEl) return;
-    for (const view in VIEWS) {
+    navTabsEl.innerHTML = '';
+
+    for (const key in VIEWS) {
         const tabEl = document.createElement('button');
         tabEl.type = 'button';
-        tabEl.textContent = VIEWS[view].title;
+        tabEl.textContent = VIEWS[key].title;
         tabEl.className = 'nav-tab';
-
-        tabEl.addEventListener('click', () => {
-            renderView(view);
+        if (key === viewKey) tabEl.classList.add('active');
+        tabEl.addEventListener('click', async () => {
+            if (key === currentView) return;
+            const tableData = await VIEWS[key].getData();
+            await renderView(key, tableData);
         });
-
         navTabsEl.appendChild(tabEl);
     }
+}
 
-    // Populate user name
-    const usernameEl = document.querySelector('#user-name');
-    if (!usernameEl) return;
-    usernameEl.textContent = "PLACEHOLDER USERNAME";
+function renderActionButton(view) {
+    const oldBtn = document.querySelector('.nav-btn');
+    const btn = oldBtn.cloneNode(true);
+    oldBtn.replaceWith(btn);
+    btn.textContent = view.action.label;
+    btn.addEventListener('click', () => view.action.handler());
+}
+
+function renderFilters(view) {
+    const container = document.querySelector('#filter-groups');
+    if (!container) return;
+    container.innerHTML = '';
 
     const filterFunc = buildFilterFunc(view.filters);
 
-    // Populate sidebar filters
-    const filterGroupsContainerEl = document.querySelector('#filter-groups');
-    if (!filterGroupsContainerEl) return;
-    filterGroupsContainerEl.innerHTML = '';
-
     for (const [key, filter] of Object.entries(view.filters)) {
-        const filterGroupEl = document.createElement('div');
-        filterGroupEl.className = 'filter-group';
+        const groupEl = document.createElement('div');
+        groupEl.className = 'filter-group';
 
-        const filterTitleEl = document.createElement('div');
-        filterTitleEl.className = 'filter-title';
-        filterTitleEl.innerHTML = `<span>${filter.label}</span><svg class="chevron" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"></path></svg>`;
-        filterTitleEl.addEventListener('click', () => {
-            filterGroupEl.classList.toggle('open');
-        });
-        filterGroupEl.appendChild(filterTitleEl);
+        const titleEl = document.createElement('div');
+        titleEl.className = 'filter-title';
+        titleEl.innerHTML = `<span>${filter.label}</span><svg class="chevron" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"></path></svg>`;
+        titleEl.addEventListener('click', () => groupEl.classList.toggle('open'));
+        groupEl.appendChild(titleEl);
 
-        const filterOptionsEl = document.createElement('div');
-        filterOptionsEl.className = 'filter-options';
+        const optionsEl = document.createElement('div');
+        optionsEl.className = 'filter-options';
 
         for (const option of filter.options) {
             const label = document.createElement('label');
-
             const checkbox = document.createElement('input');
             checkbox.type = 'checkbox';
             checkbox.value = option;
@@ -88,48 +81,69 @@ export async function renderView(viewKey, permissions) {
                 } else {
                     filterState[category] = filterState[category].filter(v => v !== value);
                 }
-
                 table.setFilter(filterFunc);
             });
 
             label.append(checkbox, ' ', option);
-            filterOptionsEl.append(label);
+            optionsEl.append(label);
         }
 
-        filterGroupEl.appendChild(filterOptionsEl);
-        filterGroupsContainerEl.appendChild(filterGroupEl);
-    }
-
-    // Populate table
-    const data = await view.getData;
-    renderTable(table, view.columns, data);
-
-    // Enable search
-    const searchInput = document.getElementById('search-input');
-    enableSearch(searchInput, table);
-
-    // Populate column toggle buttons
-    const toggleColumnContainerEl = document.querySelector('#column-toggle-container');
-    toggleColumnContainerEl.innerHTML = '';
-    for (const column of view.columns) {
-        const columnToggleBtn = document.createElement('span');
-        columnToggleBtn.className = 'column-toggle';
-        columnToggleBtn.textContent = column.title;
-
-        columnToggleBtn.addEventListener('click', () => {
-            table.toggleColumn(column.field);
-            columnToggleBtn.classList.toggle('hidden');
-        })
-
-        toggleColumnContainerEl.appendChild(columnToggleBtn);
+        groupEl.appendChild(optionsEl);
+        container.appendChild(groupEl);
     }
 }
 
+function renderColumnToggles(view) {
+    const container = document.querySelector('#column-toggle-container');
+    if (!container) return;
+    container.innerHTML = '';
+
+    for (const column of view.columns) {
+        const btn = document.createElement('span');
+        btn.className = 'column-toggle';
+        btn.textContent = column.title;
+        btn.addEventListener('click', () => {
+            table.toggleColumn(column.field);
+            btn.classList.toggle('hidden');
+        });
+        container.appendChild(btn);
+    }
+}
+
+// Resets sorters and header filters
 function renderTable(table, columns, data) {
     table.setColumns(columns);
     table.setData(data);
 }
 
+// Preserves filters, search, and order
+function refreshTable(table, newData) {
+    table.setData(newData);
+}
+
+// Full page render (switching views)
+export async function renderView(viewKey, tableData) {
+    const view = VIEWS[viewKey];
+    if (!view) return;
+
+    currentView = viewKey;
+
+    renderNavbar(viewKey);
+    renderActionButton(view);
+
+    resetFilterState(view.filters);
+    renderFilters(view);
+
+    await renderTable(table, view.columns, tableData);
+
+    enableSearch(document.getElementById('search-input'), table);
+    renderColumnToggles(view);
+
+    const usernameEl = document.querySelector('#user-name');
+    if (usernameEl) usernameEl.textContent = "PLACEHOLDER USERNAME";
+}
+
+// Filter Table Logic
 function parseRange(rangeStr) {
     if (rangeStr.startsWith('< '))  return { type: 'lt', val: parseFloat(rangeStr.slice(2)) };
     if (rangeStr.startsWith('> '))  return { type: 'gt', val: parseFloat(rangeStr.slice(2)) };
@@ -152,9 +166,7 @@ function buildFilterFunc(filters) {
         for (const [key, filter] of Object.entries(filters)) {
             const selected = filterState[key];
             if (!selected || selected.length >= filterCounts[key]) continue;
-
             const value = data[key];
-
             if (filter.type === 'range') {
                 if (value == null || value === '') return false;
                 if (!selected.some(r => matchesRange(value, r))) return false;

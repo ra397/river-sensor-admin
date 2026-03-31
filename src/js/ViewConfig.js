@@ -28,7 +28,7 @@ export const VIEWS = {
             {title: "Wet", field: "wet"},
             {title: "Miss", field: "misreads"},
         ],
-        getData: getObservatoryTableData(),
+        getData: getObservatoryTableData,
     },
 
     sensors: {
@@ -48,7 +48,7 @@ export const VIEWS = {
             {title: "Creation Date", field: "creationDate"},
             {title: "Retirement Date", field: "retirementDate"},
         ],
-        getData: getSensorTableData(),
+        getData: getSensorTableData,
     },
 
     tickets: {
@@ -65,7 +65,7 @@ export const VIEWS = {
             {title: "Assigned to", field: "assignedTo"},
             {title: "Problem", field: "problem"},
         ],
-        getData: getTicketTableData(),
+        getData: getTicketTableData,
     },
 
     users: {

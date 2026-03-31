@@ -8,6 +8,7 @@
 }
 
 .column-toggle {
+    font-size: 0.9em;
     color: var(--light-blue);
     cursor: pointer;
     user-select: none;
