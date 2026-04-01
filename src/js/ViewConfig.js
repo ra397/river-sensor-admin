@@ -4,7 +4,7 @@ import {
     getTicketTableData,
     getSensorOptions,
     getObservatoryData, getSensorData
-} from "./getData.js";
+} from "./api.js";
 import { openModal } from "./ModalManager.js";
 
 export const VIEWS = {

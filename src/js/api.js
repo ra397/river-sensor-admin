@@ -5,8 +5,20 @@ import { CONFIG } from "./config.js";
  * for different tables.
  */
 
-async function fetchJson(path) {
-    const response = await fetch(`${CONFIG.DEV_SERVER}${path}`);
+async function request(method, path, body = null) {
+    const options = { method, headers: {} };
+
+    if (body != null) {
+        options.headers['Content-Type'] = 'application/json';
+        options.body = JSON.stringify(body);
+    }
+
+    const response = await fetch(`${CONFIG.DEV_SERVER}${path}`, options);
+
+    if (!response.ok) {
+        throw new Error(`${method} ${path} failed: ${response.status}`);
+    }
+
     return response.json();
 }
 
@@ -27,14 +39,14 @@ export async function getObservatoryTableData() {
         wetnessAnomalies,
         misreads,
     ] = await Promise.all([
-        fetchJson('/observatories'),
-        fetchJson('/sensors'),
-        fetchJson('/observatories_sensors'),
-        fetchJson('/latest_observation'),
-        fetchJson('/daily_min_voltage'),
-        fetchJson('/no_pckt_days'),
-        fetchJson('/wetness_anomalies'),
-        fetchJson('/misreads'),
+        request('GET', '/observatories'),
+        request('GET', '/sensors'),
+        request('GET', '/observatories_sensors'),
+        request('GET', '/latest_observation'),
+        request('GET', '/daily_min_voltage'),
+        request('GET', '/no_pckt_days'),
+        request('GET', '/wetness_anomalies'),
+        request('GET', '/misreads'),
     ]);
 
     // Create lookup maps for efficient joining
@@ -81,7 +93,7 @@ export async function getObservatoryTableData() {
  * @returns {Promise<Array>} Combined sensor table data
  */
 export async function getSensorTableData() {
-    const sensors = await fetchJson('/sensors');
+    const sensors = await request('GET', '/sensors');
 
     return sensors.map(sensor => ({
         id: sensor.sid,
@@ -112,11 +124,11 @@ export async function getTicketTableData() {
         sensors,
         users,
     ] = await Promise.all([
-        fetchJson('/tickets'),
-        fetchJson('/observatories'),
-        fetchJson('/observatories_sensors'),
-        fetchJson('/sensors'),
-        fetchJson('/users'),
+        request('GET', '/tickets'),
+        request('GET', '/observatories'),
+        request('GET', '/observatories_sensors'),
+        request('GET', '/sensors'),
+        request('GET', '/users'),
     ]);
 
     // Create lookup maps for efficient joining
@@ -143,21 +155,21 @@ export async function getTicketTableData() {
 }
 
 export async function getObservatoryData(id) {
-    return fetchJson(`/observatories/${id}`);
+    return request('GET', `/observatories/${id}`);
 }
 
 export async function getSensorData(id) {
-    return fetchJson(`/sensors/${id}`);
+    return request('GET', `/sensors/${id}`);
 }
 
 export async function getSensorOptions(id) {
     if (id != null) {
-        const data = await fetchJson(`/hints/${id}`);
+        const data = await request('GET', `/hints/${id}`);
         return data.current_sensor
             ? [data.current_sensor, '', ...data.sensors]
             : ['', ...data.sensors];
     }
 
-    const data = await fetchJson(`/hints`);
+    const data = await request('GET', `/hints`);
     return ['', ...data.sensors];
 }

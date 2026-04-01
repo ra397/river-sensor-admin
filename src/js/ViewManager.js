@@ -2,7 +2,6 @@ import { table } from "../main.js";
 import { VIEWS } from "./ViewConfig.js";
 import { enableSearch } from "./search.js";
 import { openModal } from "./ModalManager.js";
-import { getObservatoryData } from "./getData.js";
 
 const filterState = {};
 const filterCounts = {};
