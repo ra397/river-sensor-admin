@@ -99,6 +99,7 @@ function renderColumnToggles(view) {
     container.innerHTML = '';
 
     for (const column of view.columns) {
+        if (column.visible === false) continue;
         const btn = document.createElement('span');
         btn.className = 'column-toggle';
         btn.textContent = column.title;
@@ -138,10 +139,14 @@ export async function renderView(viewKey, tableData) {
 
     await renderTable(table, view.columns, tableData);
 
-    table.on('rowClick', async (e, row) => {
-        const rowData = await getObservatoryData(row.getData().id);
-        await openModal(viewKey, 'edit', rowData);
-    });
+    table.off('rowClick');
+    if (view.getRowData) {
+        table.on('rowClick', async (e, row) => {
+            const rowData = await view.getRowData(row);
+            console.log(rowData);
+            await openModal(viewKey, 'edit', rowData);
+        });
+    }
 
     enableSearch(document.getElementById('search-input'), table);
     renderColumnToggles(view);

@@ -41,7 +41,8 @@ export async function openModal(viewKey, mode, data = {}) {
 
         for (const field of row) {
             if (field.optionsFrom) {
-                field.options = await field.optionsFrom();
+                console.log(data);
+                field.options = await field.optionsFrom(data.oid);
             }
 
             const label = document.createElement('label');
@@ -60,6 +61,10 @@ export async function openModal(viewKey, mode, data = {}) {
             } else {
                 input = document.createElement('input');
                 input.type = field.type || 'text';
+
+                if (field.type === 'datetime-local') {
+                    input.value = datetimeNow();
+                }
             }
 
             input.name = field.name;
@@ -152,4 +157,12 @@ export function closeModal() {
     modal.classList.remove('open');
     modal.innerHTML = '';
     initialData = null;
+}
+
+function datetimeNow() {
+    const now = new Date();
+    const offset = now.getTimezoneOffset();
+    return new Date(now.getTime() - offset * 60000)
+        .toISOString()
+        .slice(0, 16);
 }

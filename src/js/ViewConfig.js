@@ -1,4 +1,10 @@
-import { getObservatoryTableData, getSensorTableData, getTicketTableData, getSensorOptions } from "./getData.js";
+import {
+    getObservatoryTableData,
+    getSensorTableData,
+    getTicketTableData,
+    getSensorOptions,
+    getObservatoryData, getSensorData
+} from "./getData.js";
 import { openModal } from "./ModalManager.js";
 
 export const VIEWS = {
@@ -7,7 +13,7 @@ export const VIEWS = {
         action: { label: 'Create Bridge', handler: () => openModal('observatories', 'create') },
         modal: {
             create: { title: 'Create Bridge', method: 'POST' },
-            edit:   { title: 'Edit Bridge',   method: 'PATCH' },
+            edit:   { title: 'Edit Bridge',   method: 'PUT' },
             fields: [
                 [{ label: 'Name', name: 'name' }],
                 [{ label: 'Sensor', name: 'sensor', type: 'select', optionsFrom: getSensorOptions }],
@@ -33,7 +39,7 @@ export const VIEWS = {
                     { label: 'Up/Down', name: 'updown', type: 'select', options: ['', 'Up', 'Down'] },
                 ],
                 [{ label: 'Cooperator', name: 'cooperator' }],
-                [{ label: 'Public Note', name: 'publicNote', type: 'textarea', mode: 'edit' }],
+                [{ label: 'Public Note', name: 'public_note', type: 'textarea', mode: 'edit' }],
             ],
         },
         filters: {
@@ -62,18 +68,31 @@ export const VIEWS = {
             {title: "Miss", field: "misreads"},
         ],
         getData: getObservatoryTableData,
+        getRowData: (row) => getObservatoryData(row.getData().id),
     },
 
     sensors: {
         title: 'Sensors',
-        action: { label: 'Create Sensor', handler: () => console.log("Create Sensor"), },
+        action: { label: 'Create Sensor', handler: () => openModal('sensors', 'create'), },
         filters: {
             status:       { label: 'Status',         type: 'includes',         options: ['active', 'defective', 'retired', 'suspended'] },
             rate:         { label: 'Rate',           type: 'includes',         options: ['2', '3', '4', '5'] },
             firmware:     { label: 'Firmware',       type: 'includes',         options: ['0.6', '0.86', '0.88', '0.89', '0.90', '1.00', '1.01', '6.1'] },
         },
+        modal: {
+            create: { title: 'Create Sensor', method: 'POST'},
+            edit: { title: 'Edit Sensor', method: 'PUT'},
+            fields: [
+                [{ label: 'Sensor ID', name: 'sensor_id' }],
+                [{ label: 'Firmware', name: 'firmware_version'}, { label: 'Date', name: 'date', mode: 'create', type: 'datetime-local' }],
+                [{ label: 'Status', name: 'status', mode: 'edit', type: 'select', options: ['active', 'defective', 'retired', 'suspended'] }],
+                [{ label: 'IMEI', name: 'imei' }],
+                [{ label: 'Sampling Rate', name: 'sampling_rate', type: 'number' },]
+            ],
+        },
         columns: [
-            {title: "Sensor", field: "sid"},
+            {title: 'id', field: 'id', visible: false},
+            {title: "Sensor", field: "id"},
             {title: "Status", field: "status"},
             {title: "Firmware", field: "firmware"},
             {title: "IMEI", field: "imei"},
@@ -82,6 +101,7 @@ export const VIEWS = {
             {title: "Retirement Date", field: "retirementDate"},
         ],
         getData: getSensorTableData,
+        getRowData: (row) => getSensorData(row.getData().id),
     },
 
     tickets: {
