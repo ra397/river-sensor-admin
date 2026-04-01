@@ -3,6 +3,7 @@
 @import url("css/table.css");
 @import url("tabulator-tables/dist/css/tabulator.min.css");
 @import url("css/search.css");
+@import url("css/modal.css");
 
 :root {
     --black: #000;

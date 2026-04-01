@@ -1,8 +1,9 @@
-import {table} from "../main.js";
+import { table } from "../main.js";
 import { VIEWS } from "./ViewConfig.js";
 import { enableSearch } from "./search.js";
+import { openModal } from "./ModalManager.js";
+import { getObservatoryData } from "./getData.js";
 
-let currentView = null;
 const filterState = {};
 const filterCounts = {};
 
@@ -28,7 +29,6 @@ function renderNavbar(viewKey) {
         tabEl.className = 'nav-tab';
         if (key === viewKey) tabEl.classList.add('active');
         tabEl.addEventListener('click', async () => {
-            if (key === currentView) return;
             const tableData = await VIEWS[key].getData();
             await renderView(key, tableData);
         });
@@ -122,11 +122,13 @@ function refreshTable(table, newData) {
 }
 
 // Full page render (switching views)
+let previousView = null;
 export async function renderView(viewKey, tableData) {
     const view = VIEWS[viewKey];
     if (!view) return;
 
-    currentView = viewKey;
+    if (previousView === viewKey) return;
+    previousView = viewKey;
 
     renderNavbar(viewKey);
     renderActionButton(view);
@@ -135,6 +137,11 @@ export async function renderView(viewKey, tableData) {
     renderFilters(view);
 
     await renderTable(table, view.columns, tableData);
+
+    table.on('rowClick', async (e, row) => {
+        const rowData = await getObservatoryData(row.getData().id);
+        await openModal(viewKey, 'edit', rowData);
+    });
 
     enableSearch(document.getElementById('search-input'), table);
     renderColumnToggles(view);

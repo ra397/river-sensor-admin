@@ -6,6 +6,7 @@ export const table = new Tabulator("#table", {
     layout: "fitDataStretch",
     pagination: true,
     paginationSize: 50,
+    selectable: 1,
 });
 
 const tableData = await VIEWS['observatories'].getData();

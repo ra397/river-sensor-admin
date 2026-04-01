@@ -29,3 +29,8 @@
     color: var(--black) !important;
     background: var(--light-gray) !important;
 }
+
+.tabulator-row.tabulator-selected {
+    background-color: #d4e6f1;
+    color: #000;
+}

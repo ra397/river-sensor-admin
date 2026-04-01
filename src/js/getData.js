@@ -50,6 +50,7 @@ export async function getObservatoryTableData() {
     const latestDt = latestObsMap.get(obs.oid);
 
     return {
+      id: obs.oid,
       name: obs.name,
       nwsli: obs.NWSLI,
       status: sensor?.status ?? '',
@@ -136,4 +137,14 @@ export async function getTicketTableData() {
       problem: ticket.problem ?? '',
     };
   });
+}
+
+export async function getObservatoryData(id) {
+    return fetchJson(`/observatories/${id}.json`);
+}
+
+export async function getSensorOptions() {
+    const res = await fetch('/hints.json');
+    const data = await res.json();
+    return ['', ...data.sensors];
 }

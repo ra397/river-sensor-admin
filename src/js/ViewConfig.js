@@ -1,9 +1,41 @@
-import {getObservatoryTableData, getSensorTableData, getTicketTableData} from "./getTableData.js";
+import { getObservatoryTableData, getSensorTableData, getTicketTableData, getSensorOptions } from "./getData.js";
+import { openModal } from "./ModalManager.js";
 
 export const VIEWS = {
     observatories: {
         title: 'Bridges',
-        action: { label: 'Create Bridge', handler: () => console.log('Create Bridge') },
+        action: { label: 'Create Bridge', handler: () => openModal('observatories', 'create') },
+        modal: {
+            create: { title: 'Create Bridge', method: 'POST' },
+            edit:   { title: 'Edit Bridge',   method: 'PATCH' },
+            fields: [
+                [{ label: 'Name', name: 'name' }],
+                [{ label: 'Sensor', name: 'sensor', type: 'select', optionsFrom: getSensorOptions }],
+                [{ label: 'Status', name: 'status', type: 'select', options: ['new', 'active', 'defective', 'suspended', 'retired'], mode: 'edit' }],
+                [
+                    { label: 'State', name: 'state', type: 'select', options: ['IA', 'IL', 'MO'] },
+                    { label: 'County', name: 'county' },
+                    { label: 'Town', name: 'town' },
+                ],
+                [{ label: 'River', name: 'river' }],
+                [
+                    { label: 'Latitude', name: 'lat' },
+                    { label: 'Longitude', name: 'lng' },
+                ],
+                [{ label: 'Road', name: 'road' }],
+                [{ label: 'Intersection', name: 'intersection' }],
+                [
+                    { label: 'Distance', name: 'distance' },
+                    { label: 'Elevation', name: 'elevation' },
+                ],
+                [
+                    { label: 'Orientation', name: 'orientation' },
+                    { label: 'Up/Down', name: 'updown', type: 'select', options: ['', 'Up', 'Down'] },
+                ],
+                [{ label: 'Cooperator', name: 'cooperator' }],
+                [{ label: 'Public Note', name: 'publicNote', type: 'textarea', mode: 'edit' }],
+            ],
+        },
         filters: {
             status:       { label: 'Status',         type: 'includes',         options: ['active', 'defective', 'retired', 'suspended'] },
             rate:         { label: 'Rate',           type: 'includes',         options: ['2', '3', '4', '5'] },
@@ -13,6 +45,7 @@ export const VIEWS = {
             tools:        { label: 'Tools',          type: 'includes',         options: ['Ticket', 'Public Note', 'Syncable'] },
         },
         columns: [
+            {title: 'id', field: 'id', visible: false},
             {title: "Name", field: "name"},
             {title: "NWSLI", field: "nwsli"},
             {title: "Status", field: "status"},
@@ -33,7 +66,7 @@ export const VIEWS = {
 
     sensors: {
         title: 'Sensors',
-        action: { label: 'Create Sensor', handler: () => console.log('Create Sensor') },
+        action: { label: 'Create Sensor', handler: () => console.log("Create Sensor"), },
         filters: {
             status:       { label: 'Status',         type: 'includes',         options: ['active', 'defective', 'retired', 'suspended'] },
             rate:         { label: 'Rate',           type: 'includes',         options: ['2', '3', '4', '5'] },
