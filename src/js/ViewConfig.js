@@ -3,7 +3,8 @@ import {
     getSensorTableData,
     getTicketTableData,
     getSensorOptions,
-    getObservatoryData, getSensorData
+    getObservatoryData, getSensorData,
+    createNewObservatory, editObservatory
 } from "./api.js";
 import { openModal } from "./ModalManager.js";
 
@@ -68,7 +69,9 @@ export const VIEWS = {
             {title: "Miss", field: "misreads"},
         ],
         getData: getObservatoryTableData,
-        getRowData: (row) => getObservatoryData(row.getData().id),
+        postData: createNewObservatory,
+        putData: editObservatory,
+        getRowData: (id) => getObservatoryData(id),
     },
 
     sensors: {
@@ -101,7 +104,7 @@ export const VIEWS = {
             {title: "Retirement Date", field: "retirementDate"},
         ],
         getData: getSensorTableData,
-        getRowData: (row) => getSensorData(row.getData().id),
+        getRowData: (id) => getSensorData(id),
     },
 
     tickets: {

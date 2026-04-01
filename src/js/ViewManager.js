@@ -117,7 +117,7 @@ function renderTable(table, columns, data) {
 }
 
 // Preserves filters, search, and order
-function refreshTable(table, newData) {
+export function refreshTable(table, newData) {
     table.setData(newData);
 }
 
@@ -141,9 +141,9 @@ export async function renderView(viewKey, tableData) {
     table.off('rowClick');
     if (view.getRowData) {
         table.on('rowClick', async (e, row) => {
-            const rowData = await view.getRowData(row);
-            console.log(rowData);
-            await openModal(viewKey, 'edit', rowData);
+            const id = row.getData().id;
+            const rowData = await view.getRowData(id);
+            await openModal(viewKey, 'edit', rowData, id);
         });
     }
 

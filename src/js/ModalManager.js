@@ -1,8 +1,10 @@
 import { VIEWS } from './ViewConfig.js';
+import {refreshTable} from "./ViewManager.js";
+import { table } from "../main.js";
 
 let initialData = null;
 
-export async function openModal(viewKey, mode, data = {}) {
+export async function openModal(viewKey, mode, data = {}, id = null) {
     const view = VIEWS[viewKey];
     const config = view.modal[mode];   // { title, method }
     const fields = view.modal.fields;
@@ -41,8 +43,7 @@ export async function openModal(viewKey, mode, data = {}) {
 
         for (const field of row) {
             if (field.optionsFrom) {
-                console.log(data);
-                field.options = await field.optionsFrom(data.oid);
+                field.options = await field.optionsFrom(id);
             }
 
             const label = document.createElement('label');
@@ -106,15 +107,24 @@ export async function openModal(viewKey, mode, data = {}) {
         footer.appendChild(resetBtn);
     }
 
-    submitBtn.addEventListener('click', () => {
+    submitBtn.addEventListener('click', async () => {
         const formData = getFormData(card);
 
         if (mode === 'edit') {
             const diff = getDiff(initialData, formData);
             console.log('PATCH diff:', diff);
+            await view.putData(id, diff);
+            closeModal();
+            const newData = await view.getData();
+            console.log(newData);
+            refreshTable(table, newData);
             // send only diff
         } else {
-            console.log('POST:', formData);
+            await view.postData(formData);
+            closeModal();
+            const newData = await view.getData();
+            console.log(newData);
+            refreshTable(table, newData);
             // send full formData
         }
     });

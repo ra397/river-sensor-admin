@@ -173,3 +173,12 @@ export async function getSensorOptions(id) {
     const data = await request('GET', `/hints`);
     return ['', ...data.sensors];
 }
+
+
+export async function createNewObservatory(data) {
+    return request('POST', `/observatories`, data);
+}
+
+export async function editObservatory(id, data) {
+    return request('PUT', `/observatories/${id}`, data);
+}
