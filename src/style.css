@@ -9,9 +9,14 @@
     --black: #000;
     --light-blue: rgb(13, 110, 253);
     --light-gray: #ccc;
+    --line-height: 1.6rem;
+
+    line-height: var(--line-height);
 }
 
 body {
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    font-size: 14px;
     height: 100%;
 }
 
