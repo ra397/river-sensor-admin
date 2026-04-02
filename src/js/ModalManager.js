@@ -1,152 +1,109 @@
 import { VIEWS } from './ViewConfig.js';
-import {refreshTable} from "./ViewManager.js";
+import { refreshTable } from "./ViewManager.js";
 import { table } from "../main.js";
 
 let initialData = null;
 
 export async function openModal(viewKey, mode, data = {}, id = null) {
     const view = VIEWS[viewKey];
-    const config = view.modal[mode];   // { title, method }
-    const fields = view.modal.fields;
 
-    // Store initial snapshot for diff on edit
-    initialData = mode === 'edit' ? {...data} : null;
-
-    const modal = document.getElementById('modal');
-    modal.innerHTML = '';
+    // Deep clone modal so event listeners don't stack
+    let oldModal = document.getElementById(view.modal.templateId);
+    const modal = oldModal.cloneNode(true);
+    oldModal.replaceWith(modal);
+    // Open modal
     modal.classList.add('open');
 
-    const card = document.createElement('div');
-    card.className = 'modal-card';
+    // Store initial state of form
+    initialData = mode === 'edit' ? { ...data } : getFormData(modal);
 
-    // Header
-    const header = document.createElement('div');
-    header.className = 'modal-header';
-    header.innerHTML = `<span class="modal-title">${config.title}</span>`;
-    const closeBtn = document.createElement('button');
-    closeBtn.className = 'modal-close';
-    closeBtn.textContent = '✕';
+    // Add title based on view and mode
+    const title = view.modal[mode].title;
+    const titleEl = modal.querySelector(".modal-title");
+    titleEl.textContent = title;
+
+    // Wire closeModal to closeBtn
+    const closeBtn = modal.querySelector('.modal-close');
     closeBtn.addEventListener('click', closeModal);
-    header.appendChild(closeBtn);
-    card.appendChild(header);
 
-    // Body
-    const body = document.createElement('div');
-    body.className = 'modal-body';
-
-    for (const row of fields) {
-        const filteredRow = row.filter(f => !f.mode || f.mode === mode);
-        if (filteredRow.length === 0) continue;
-
-        const rowEl = document.createElement('div');
-        rowEl.className = 'modal-row';
-
-        for (const field of row) {
-            if (field.optionsFrom) {
-                field.options = await field.optionsFrom(id);
-            }
-
-            const label = document.createElement('label');
-            label.className = 'modal-label';
-            label.textContent = field.label;
-
-            let input;
-            if (field.type === 'select') {
-                input = document.createElement('select');
-                for (const opt of field.options) {
-                    const option = document.createElement('option');
-                    option.value = opt;
-                    option.textContent = opt;
-                    input.appendChild(option);
-                }
-            } else {
-                input = document.createElement('input');
-                input.type = field.type || 'text';
-
-                if (field.type === 'datetime-local') {
-                    input.value = datetimeNow();
-                }
-            }
-
-            input.name = field.name;
-            input.className = 'modal-input';
-
-            // Prefill for edit mode
-            if (data[field.name] != null) {
-                input.value = data[field.name];
-            }
-
-            label.appendChild(input);
-            rowEl.appendChild(label);
-        }
-
-        body.appendChild(rowEl);
-    }
-
-    card.appendChild(body);
-
-    // Submit
-    const footer = document.createElement('div');
-    footer.className = 'modal-footer';
-    const submitBtn = document.createElement('button');
-    submitBtn.classList.add('modal-btn', 'modal-submit');
-    submitBtn.textContent = mode === 'edit' ? 'Save' : 'Submit';
-
-    if (mode === 'edit') {
-        submitBtn.disabled = true;
-
-        const resetBtn = document.createElement('button');
-        resetBtn.classList.add('modal-btn', 'modal-reset');
-        resetBtn.textContent = 'Reset';
-        resetBtn.addEventListener('click', () => {
-            card.querySelectorAll('.modal-input').forEach(input => {
-                input.value = initialData[input.name] ?? '';
-            });
-            submitBtn.disabled = true;
-        });
-        footer.appendChild(resetBtn);
-    }
-
-    submitBtn.addEventListener('click', async () => {
-        const formData = getFormData(card);
-
-        if (mode === 'edit') {
-            const diff = getDiff(initialData, formData);
-            console.log('PATCH diff:', diff);
-            await view.putData(id, diff);
-            closeModal();
-            const newData = await view.getData();
-            console.log(newData);
-            refreshTable(table, newData);
-            // send only diff
-        } else {
-            await view.postData(formData);
-            closeModal();
-            const newData = await view.getData();
-            console.log(newData);
-            refreshTable(table, newData);
-            // send full formData
-        }
+    // Hide all the fields that do not belong to this mode
+    modal.querySelectorAll('[data-mode]').forEach(el => {
+        if (el.dataset.mode !== mode) el.classList.add('hidden');
     });
 
-    footer.appendChild(submitBtn);
-    card.appendChild(footer);
+    // Populate prefills
+    const prefill = view.modal.prefill || {};
+    for (const el of modal.querySelectorAll('[data-prefill]')) {
+        const key = el.dataset.prefill;
+        const source = prefill[key];
+        if (!source) continue;
 
-    // For edit mode: enable submit only when something changed
+        const value = typeof source === 'function' ? await source(id) : source;
+
+        if (el.tagName === 'SELECT') {
+            el.innerHTML = '';
+            for (const opt of value) {
+                const option = document.createElement('option');
+                option.value = opt;
+                option.textContent = opt;
+                el.appendChild(option);
+            }
+        } else {
+            el.value = value;
+        }
+    }
+
+    // Prefill data on edit mode
     if (mode === 'edit') {
-        card.addEventListener('input', () => {
-            const formData = getFormData(card);
-            const diff = getDiff(initialData, formData);
-            submitBtn.disabled = Object.keys(diff).length === 0;
+        modal.querySelectorAll('.modal-input').forEach(input => {
+            if (data[input.name] != null) {
+                input.value = data[input.name];
+            }
         });
     }
 
-    modal.appendChild(card);
+    // Create submit based on mode
+    const submitBtn = modal.querySelector('.submit-btn');
+    submitBtn.textContent = mode === 'edit' ? 'Save' : 'Submit';
+    submitBtn.disabled = true;
+
+    // Enable submit when form differs from initial
+    const inputHandler = () => {
+        const diff = getDiff(initialData, getFormData(modal));
+        submitBtn.disabled = Object.keys(diff).length === 0;
+    };
+    modal.addEventListener('input', inputHandler);
+
+
+    const resetBtn = modal.querySelector('.reset-btn');
+    resetBtn.addEventListener('click', () => {
+        modal.querySelectorAll('.modal-input').forEach(input => {
+            input.value = initialData[input.name];
+        });
+        submitBtn.disabled = true;
+    });
+
+    submitBtn.addEventListener('click', async () => {
+        const formData = getFormData(modal);
+        if (mode === 'edit') {
+            const diff = getDiff(initialData, formData);
+            await view.modal[mode].method(id, diff);
+            const newData = await view.getData();
+            refreshTable(table, newData);
+            closeModal();
+        } else if (mode === 'create') {
+            await view.modal[mode].method(formData);
+            const newData = await view.getData();
+            refreshTable(table, newData);
+            closeModal();
+        }
+    })
 }
 
 function getFormData(card) {
     const data = {};
     card.querySelectorAll('.modal-input').forEach(input => {
+        if (input.closest('[data-mode].hidden')) return;
         data[input.name] = input.value.trim();
     });
     return data;
@@ -163,13 +120,21 @@ function getDiff(initial, current) {
 }
 
 export function closeModal() {
-    const modal = document.getElementById('modal');
+    const modal = document.querySelector('.modal.open');
+    // Close modal
     modal.classList.remove('open');
-    modal.innerHTML = '';
+    // Show all elements again
+    modal.querySelectorAll('[data-mode]').forEach(el => {
+        el.classList.remove('hidden');
+    });
+    // Unfill all data
+    modal.querySelectorAll('.modal-input').forEach(input => {
+        input.value = '';
+    });
     initialData = null;
 }
 
-function datetimeNow() {
+export function datetimeNow() {
     const now = new Date();
     const offset = now.getTimezoneOffset();
     return new Date(now.getTime() - offset * 60000)

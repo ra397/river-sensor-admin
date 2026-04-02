@@ -35,7 +35,88 @@
         </div>
     </div>
 
-    <div id="modal"></div>
+    <div class="modal" id="observatory">
+        <div class="modal-card">
+            <div class="modal-header">
+                <span class="modal-title"></span>
+                <button class="modal-close">X</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-row">
+                    <label class="modal-label">Name <input name="name" class="modal-input" type="text"></label>
+                    <label class="modal-label">Sensor <select name="sensor" class="modal-input" data-prefill="sensorOptions"></select></label>
+                    <label class="modal-label" data-mode="edit">Status<select name="status" class="modal-input" data-prefill="statusOptions"></select></label>
+                </div>
+                <div class="modal-row">
+                    <label class="modal-label">State<select name="state" class="modal-input" data-prefill="stateOptions"></select></label>
+                    <label class="modal-label">County <input name="county" class="modal-input" type="text"></label>
+                    <label class="modal-label">Town <input name="town" class="modal-input" type="text"></label>
+                </div>
+                <div class="modal-row">
+                    <label class="modal-label">River <input name="river" class="modal-input" type="text"></label>
+                </div>
+                <div class="modal-row">
+                    <label class="modal-label">Latitude <input name="lat" class="modal-input" type="text"></label>
+                    <label class="modal-label">Longitude <input name="lng" class="modal-input" type="text"></label>
+                </div>
+                <div class="modal-row">
+                    <label class="modal-label">Road <input name="road" class="modal-input" type="text"></label>
+                </div>
+                <div class="modal-row">
+                    <label class="modal-label">Intersection <input name="intersection" class="modal-input" type="text"></label>
+                </div>
+                <div class="modal-row">
+                    <label class="modal-label">Distance <input name="distance" class="modal-input" type="text"></label>
+                    <label class="modal-label">Elevation <input name="elevation" class="modal-input" type="text"></label>
+                </div>
+                <div class="modal-row">
+                    <label class="modal-label">Orientation <input name="orientation" class="modal-input" type="text"></label>
+                    <label class="modal-label">Up/Down<select name="updown" class="modal-input" data-prefill="upDownOptions"></select></label>
+                </div>
+                <div class="modal-row">
+                    <label class="modal-label">Cooperator <input name="cooperator" class="modal-input" type="text"></label>
+                </div>
+                <div class="modal-row">
+                    <label class="modal-label" data-mode="edit">Public Note <textarea name="public_note" class="modal-input"></textarea></label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn reset-btn">Reset</button>
+                <button class="modal-btn submit-btn"></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="sensor">
+        <div class="modal-card">
+            <div class="modal-header">
+                <span class="modal-title"></span>
+                <button class="modal-close">X</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-row">
+                    <label class="modal-label">Sensor ID <input name="sensor_id" class="modal-input" type="text"></label>
+                </div>
+                <div class="modal-row">
+                    <label class="modal-label">Firmware <input name="firmware_version" class="modal-input" type="text"></label>
+                    <label class="modal-label" data-mode="create">Date <input name="date" class="modal-input" type="datetime-local" data-prefill="datetimeNow"></label>
+                </div>
+                <div class="modal-row" data-mode="edit">
+                    <label class="modal-label">Status <select name="status" class="modal-input" data-prefill="statusOptions"></select></label>
+                </div>
+                <div class="modal-row">
+                    <label class="modal-label">IMEI <input name="imei" class="modal-input" type="text"></label>
+                </div>
+                <div class="modal-row">
+                    <label class="modal-label">Sampling Rate <input name="sampling_rate" class="modal-input" type="number"></label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn reset-btn">Reset</button>
+                <button class="modal-btn submit-btn"></button>
+            </div>
+        </div>
+    </div>
 
     <script type="module" src="/src/main.js"></script>
   </body>
