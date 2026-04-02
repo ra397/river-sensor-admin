@@ -3,7 +3,8 @@ import { TabulatorFull as Tabulator } from "tabulator-tables";
 import {VIEWS} from "./js/ViewConfig.js";
 
 export const table = new Tabulator("#table", {
-    layout: "fitDataStretch",
+    height: '100%',
+    layout: "fitColumns",
     pagination: true,
     paginationSize: 50,
     selectable: 1,

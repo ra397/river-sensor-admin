@@ -4,8 +4,9 @@
     gap: 1em;
 
     flex: 0 0 200px;
-    margin-top: 1.6em;
+    margin-top: var(--line-height);
     padding-right: 0.5em;
+    padding-left: 0.5em;
 }
 
 .sidebar-heading {
