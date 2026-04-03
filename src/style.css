@@ -4,11 +4,13 @@
 @import url("tabulator-tables/dist/css/tabulator.min.css");
 @import url("css/search.css");
 @import url("css/modal.css");
+@import url('css/button.css');
 
 :root {
     --black: #000;
     --light-blue: rgb(13, 110, 253);
     --light-gray: #ccc;
+    --red: #dc3545;
     --line-height: 1.6rem;
 }
 

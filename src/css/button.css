@@ -1,0 +1,32 @@
+.btn {
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 32px;
+    font-size: 0.9em;
+    cursor: pointer;
+}
+
+.open-btn {
+    background: white;
+    border: 1px solid var(--light-blue);
+    color: var(--light-blue);
+}
+
+.submit-btn {
+    background: var(--light-blue);
+}
+
+.reset-btn {
+    background: var(--light-gray);
+}
+
+.close-btn {
+    background: white;
+    border: 1px solid var(--red);
+    color: var(--red);
+}
+
+.submit-btn:disabled {
+    opacity: 0.4;
+}

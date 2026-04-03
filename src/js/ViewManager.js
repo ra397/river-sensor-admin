@@ -36,7 +36,7 @@ function renderNavbar(viewKey) {
 }
 
 function renderActionButton(view) {
-    const oldBtn = document.querySelector('.nav-btn');
+    const oldBtn = document.querySelector('#nav-action-btn');
     const btn = oldBtn.cloneNode(true);
     oldBtn.replaceWith(btn);
     btn.textContent = view.action.label;
