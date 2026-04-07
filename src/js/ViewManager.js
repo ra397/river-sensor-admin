@@ -143,6 +143,7 @@ export async function renderView(viewKey, tableData) {
         table.on('rowClick', async (e, row) => {
             const id = row.getData().id;
             const rowData = await view.getRowData(id);
+            console.log(rowData);
             await openModal(viewKey, 'edit', rowData, id);
         });
     }

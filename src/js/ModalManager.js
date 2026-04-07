@@ -38,7 +38,7 @@ export async function openModal(viewKey, mode, data = {}, id = null) {
         const source = prefill[key];
         if (!source) continue;
 
-        const value = typeof source === 'function' ? await source(id) : source;
+        const value = typeof source === 'function' ? await source(data) : source;
 
         if (el.tagName === 'SELECT') {
             el.innerHTML = '';

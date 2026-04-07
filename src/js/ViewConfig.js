@@ -20,7 +20,7 @@ export const VIEWS = {
                 stateOptions: ['', "IA", "IL", "WA", "CO"],
                 statusOptions: ['', 'active', 'defective', 'retired', 'suspended'],
                 sensorOptions: getSensorOptions,
-                upDownOptions: ['', 'Up', 'Down'],
+                upDownOptions: ['', 'U', 'D'],
             },
         },
         filters: {
@@ -43,10 +43,14 @@ export const VIEWS = {
             {title: "Rate", field: "rate", sorter: "number"},
             {title: "Voltage", field: "voltage", sorter: "number"},
             {title: "Firmware", field: "firmware", sorter: "number"},
-            {title: "Date", field: "date"},
+            {title: "Date", field: "date",
+                sorter: function(a, b) {
+                    return new Date(a).getTime() - new Date(b).getTime();
+                }
+            },
             {title: "No Packet Days", field: "no_pckt_days", sorter: "number"},
             {title: "Wet", field: "wet"},
-            {title: "Miss", field: "misreads"},
+            {title: "Miss", field: "misread"},
         ],
         getData: getObservatoryTableData,
         getRowData: (id) => getObservatoryData(id),
