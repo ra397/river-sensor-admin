@@ -18,13 +18,13 @@ export const VIEWS = {
             templateId: 'observatory',
             prefill: {
                 stateOptions: ['', "IA", "IL", "WA", "CO"],
-                statusOptions: ['', 'active', 'defective', 'retired', 'suspended'],
+                statusOptions: ['', 'new', 'active', 'maintenance', 'decommissioned'],
                 sensorOptions: getSensorOptions,
                 upDownOptions: ['', 'U', 'D'],
             },
         },
         filters: {
-            status:       { label: 'Status',         type: 'includes',         options: ['active', 'defective', 'retired', 'suspended'] },
+            status:       { label: 'Status',         type: 'includes',         options: ['new', 'active', 'maintenance', 'decommissioned'] },
             rate:         { label: 'Rate',           type: 'includes',         options: ['2', '3', '4', '5'] },
             firmware:     { label: 'Firmware',       type: 'includes',         options: ['0.6', '0.86', '0.88', '0.89', '0.90', '1.00', '1.01', '6.1'] },
             no_pckt_days: { label: 'No Packet Days', type: 'range',            options: ['< 7', '7 - 14', '> 14'] },
@@ -60,7 +60,7 @@ export const VIEWS = {
         title: 'Sensors',
         action: { label: 'Create Sensor', handler: () => openModal('sensors', 'create'), },
         filters: {
-            status:       { label: 'Status',         type: 'includes',         options: ['active', 'defective', 'retired', 'suspended'] },
+            status:       { label: 'Status',         type: 'includes',         options: ['new', 'active', 'maintenance', 'decommissioned'] },
             rate:         { label: 'Rate',           type: 'includes',         options: ['2', '3', '4', '5'] },
             firmware:     { label: 'Firmware',       type: 'includes',         options: ['0.6', '0.86', '0.88', '0.89', '0.90', '1.00', '1.01', '6.1'] },
         },
@@ -69,7 +69,7 @@ export const VIEWS = {
             edit:   { title: 'Edit Sensor',   method: editSensor },
             templateId: 'sensor',
             prefill: {
-                statusOptions: ['', 'active', 'defective', 'retired', 'suspended'],
+                statusOptions: ['', 'new', 'active', 'maintenance', 'decommissioned'],
                 datetimeNow: datetimeNow,
             },
         },

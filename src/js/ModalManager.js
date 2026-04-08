@@ -74,7 +74,6 @@ export async function openModal(viewKey, mode, data = {}, id = null) {
     };
     modal.addEventListener('input', inputHandler);
 
-
     const resetBtn = modal.querySelector('.reset-btn');
     resetBtn.addEventListener('click', () => {
         modal.querySelectorAll('.modal-input').forEach(input => {
@@ -83,22 +82,69 @@ export async function openModal(viewKey, mode, data = {}, id = null) {
         submitBtn.disabled = true;
     });
 
-    submitBtn.addEventListener('click', async () => {
+    submitBtn.addEventListener('click', () => {
+        enterConfirm(modal, mode);
+    });
+
+    // Wire up confirm buttons (approve/cancel)
+    const approveBtn = modal.querySelector('.approve-btn');
+    const cancelBtn = modal.querySelector('.cancel-btn');
+
+    approveBtn.addEventListener('click', async () => {
         const formData = getFormData(modal);
         if (mode === 'edit') {
             const diff = getDiff(initialData, formData);
             await view.modal[mode].method(id, diff);
-            const newData = await view.getData();
-            refreshTable(table, newData);
-            closeModal();
-        } else if (mode === 'create') {
+        } else {
             await view.modal[mode].method(formData);
-            const newData = await view.getData();
-            refreshTable(table, newData);
-            closeModal();
         }
-    })
+        const newData = await view.getData();
+        refreshTable(table, newData);
+        closeModal();
+    });
+
+    cancelBtn.addEventListener('click', () => {
+        exitConfirm(modal);
+    });
 }
+
+// --- Confirmation flow ---
+
+function enterConfirm(modal, mode) {
+    modal.classList.add('confirming');
+
+    // Disable all inputs
+    modal.querySelectorAll('.modal-input').forEach(input => {
+        input.disabled = true;
+    });
+
+    // For edit mode, show original values above changed fields
+    if (mode === 'edit') {
+        const diff = getDiff(initialData, getFormData(modal));
+        for (const key of Object.keys(diff)) {
+            const input = modal.querySelector(`.modal-input[name="${key}"]`);
+            if (!input) continue;
+            const orig = document.createElement('div');
+            orig.className = 'original-value';
+            orig.textContent = initialData[key] || '(empty)';
+            input.parentNode.insertBefore(orig, input);
+        }
+    }
+}
+
+function exitConfirm(modal) {
+    modal.classList.remove('confirming');
+
+    // Re-enable all inputs
+    modal.querySelectorAll('.modal-input').forEach(input => {
+        input.disabled = false;
+    });
+
+    // Remove any injected original-value elements
+    modal.querySelectorAll('.original-value').forEach(el => el.remove());
+}
+
+// --- Helpers ---
 
 function getFormData(card) {
     const data = {};
@@ -121,16 +167,16 @@ function getDiff(initial, current) {
 
 export function closeModal() {
     const modal = document.querySelector('.modal.open');
-    // Close modal
     modal.classList.remove('open');
-    // Show all elements again
+    modal.classList.remove('confirming');
     modal.querySelectorAll('[data-mode]').forEach(el => {
         el.classList.remove('hidden');
     });
-    // Unfill all data
     modal.querySelectorAll('.modal-input').forEach(input => {
         input.value = '';
+        input.disabled = false;
     });
+    modal.querySelectorAll('.original-value').forEach(el => el.remove());
     initialData = null;
 }
 

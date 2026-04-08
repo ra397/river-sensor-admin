@@ -63,8 +63,22 @@
     border-radius: 4px;
 }
 
-.modal-footer {
+.modal-actions {
     display: flex;
     justify-content: center;
     gap: 2em;
+}
+
+.approve-btn, .cancel-btn { display: none; }
+
+.modal.confirming .submit-btn,
+.modal.confirming .reset-btn { display: none; }
+.modal.confirming .approve-btn,
+.modal.confirming .cancel-btn { display: inline-block; }
+
+.original-value {
+    font-size: 1em;
+    color: var(--light-gray, #888);
+    padding: 2px 4px;
+    margin-bottom: 2px;
 }

@@ -13,11 +13,11 @@
     color: var(--light-blue);
 }
 
-.submit-btn {
+.submit-btn, .approve-btn {
     background: var(--light-blue);
 }
 
-.reset-btn {
+.reset-btn, .cancel-btn {
     background: var(--light-gray);
 }
 
