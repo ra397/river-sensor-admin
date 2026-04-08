@@ -153,9 +153,9 @@ export async function editObservatory(id, data) {
 }
 
 export async function createNewSensor(data) {
-
+    return request('POST', `/sensors`, data);
 }
 
 export async function editSensor(id, data) {
-
+    return request('PUT', `/sensors/${id}`, data);
 }

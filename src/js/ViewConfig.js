@@ -87,26 +87,26 @@ export const VIEWS = {
         getRowData: (id) => getSensorData(id),
     },
 
-    tickets: {
-        title: 'Tickets',
-        action: { label: 'Create Ticket', handler: () => console.log('Create Ticket') },
-        filters: {},
-        columns: [
-            {title: "#", field: "tid"},
-            {title: "Bridge", field: "bridge"},
-            {title: "Sensor", field: "sensor"},
-            {title: "Status", field: "status"},
-            {title: "Created at", field: "createdAt"},
-            {title: "Created by", field: "createdBy"},
-            {title: "Assigned to", field: "assignedTo"},
-            {title: "Problem", field: "problem"},
-        ],
-        getData: getTicketTableData,
-    },
-
-    users: {
-        title: 'Users',
-        action: null,
-        filters: {},
-    },
+    // tickets: {
+    //     title: 'Tickets',
+    //     action: { label: 'Create Ticket', handler: () => console.log('Create Ticket') },
+    //     filters: {},
+    //     columns: [
+    //         {title: "#", field: "tid"},
+    //         {title: "Bridge", field: "bridge"},
+    //         {title: "Sensor", field: "sensor"},
+    //         {title: "Status", field: "status"},
+    //         {title: "Created at", field: "createdAt"},
+    //         {title: "Created by", field: "createdBy"},
+    //         {title: "Assigned to", field: "assignedTo"},
+    //         {title: "Problem", field: "problem"},
+    //     ],
+    //     getData: getTicketTableData,
+    // },
+    //
+    // users: {
+    //     title: 'Users',
+    //     action: null,
+    //     filters: {},
+    // },
 };
