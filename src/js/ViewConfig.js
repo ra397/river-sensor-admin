@@ -90,7 +90,9 @@ export const VIEWS = {
     tickets: {
         title: 'Tickets',
         action: { label: 'Create Ticket', handler: () => openModal('tickets', 'create'), },
-        filters: {},
+        filters: {
+            status:       { label: 'Status',         type: 'includes',         options: ['assigned', 'suspended', 'done'] },
+        },
         modal: {
             create: { title: 'Create Ticket', method: createNewTicket },
             edit:   { title: 'Edit Ticket', method: editTicket },

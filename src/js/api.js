@@ -131,7 +131,16 @@ export async function getTicketTableData() {
     const tickets = await request('GET', '/tickets');
 
     return tickets.map(ticket => ({
-
+        tid: ticket.ticket_id,
+        bridge: ticket.observatory?.name ?? '',
+        sensor: ticket.sensor_id ?? '',
+        status: ticket.status,
+        createdAt: ticket.created_at
+            ? new Date(ticket.created_at).toLocaleDateString()
+            : '',
+        createdBy: ticket.created_by?.fullname ?? '',
+        assignedTo: ticket.assignee?.fullname ?? '',
+        problem: ticket.problem ?? '',
     }));
 }
 
