@@ -1,0 +1,58 @@
+#login-container,
+#forgot-password-container,
+#new-password-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#forgot-password-container,
+#new-password-container {
+    display: none;
+}
+
+#login-form,
+#forgot-password-form,
+#new-password-form {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    width: 350px;
+}
+
+#login-form input,
+#forgot-password-form input,
+#new-password-form input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+#login-form input:focus,
+#forgot-password-form input:focus,
+#new-password-form input:focus {
+    outline: none;
+    border-color: var(--light-blue);
+}
+
+.link {
+    color: var(--light-blue);
+    cursor: pointer;
+    display: block;
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.link:hover {
+    text-decoration: underline;
+}

@@ -150,7 +150,8 @@ function getFormData(card) {
     const data = {};
     card.querySelectorAll('.modal-input').forEach(input => {
         if (input.closest('[data-mode].hidden')) return;
-        data[input.name] = input.value.trim();
+        const value = input.value.trim();
+        data[input.name] = value === '' ? null : value;
     });
     return data;
 }

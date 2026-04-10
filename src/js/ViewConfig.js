@@ -4,7 +4,7 @@ import {
     getTicketTableData,
     getSensorOptions,
     getObservatoryData, getSensorData,
-    createNewObservatory, editObservatory, createNewSensor, editSensor
+    createNewObservatory, editObservatory, createNewSensor, editSensor, createNewTicket, editTicket
 } from "./api.js";
 import {datetimeNow, openModal} from "./ModalManager.js";
 
@@ -18,13 +18,13 @@ export const VIEWS = {
             templateId: 'observatory',
             prefill: {
                 stateOptions: ['', "IA", "IL", "WA", "CO"],
-                statusOptions: ['', 'new', 'active', 'maintenance', 'decommissioned'],
+                statusOptions: ['', 'active', 'maintenance', 'decommissioned'],
                 sensorOptions: getSensorOptions,
                 upDownOptions: ['', 'U', 'D'],
             },
         },
         filters: {
-            status:       { label: 'Status',         type: 'includes',         options: ['new', 'active', 'maintenance', 'decommissioned'] },
+            status:       { label: 'Status',         type: 'includes',         options: ['active', 'maintenance', 'decommissioned'] },
             rate:         { label: 'Rate',           type: 'includes',         options: ['2', '3', '4', '5'] },
             firmware:     { label: 'Firmware',       type: 'includes',         options: ['0.6', '0.86', '0.88', '0.89', '0.90', '1.00', '1.01', '6.1'] },
             no_pckt_days: { label: 'No Packet Days', type: 'range',            options: ['< 7', '7 - 14', '> 14'] },
@@ -60,7 +60,7 @@ export const VIEWS = {
         title: 'Sensors',
         action: { label: 'Create Sensor', handler: () => openModal('sensors', 'create'), },
         filters: {
-            status:       { label: 'Status',         type: 'includes',         options: ['new', 'active', 'maintenance', 'decommissioned'] },
+            status:       { label: 'Status',         type: 'includes',         options: ['active', 'maintenance', 'decommissioned'] },
             rate:         { label: 'Rate',           type: 'includes',         options: ['2', '3', '4', '5'] },
             firmware:     { label: 'Firmware',       type: 'includes',         options: ['0.6', '0.86', '0.88', '0.89', '0.90', '1.00', '1.01', '6.1'] },
         },
@@ -69,7 +69,7 @@ export const VIEWS = {
             edit:   { title: 'Edit Sensor',   method: editSensor },
             templateId: 'sensor',
             prefill: {
-                statusOptions: ['', 'new', 'active', 'maintenance', 'decommissioned'],
+                statusOptions: ['', 'active', 'maintenance', 'decommissioned'],
                 datetimeNow: datetimeNow,
             },
         },
@@ -87,26 +87,28 @@ export const VIEWS = {
         getRowData: (id) => getSensorData(id),
     },
 
-    // tickets: {
-    //     title: 'Tickets',
-    //     action: { label: 'Create Ticket', handler: () => console.log('Create Ticket') },
-    //     filters: {},
-    //     columns: [
-    //         {title: "#", field: "tid"},
-    //         {title: "Bridge", field: "bridge"},
-    //         {title: "Sensor", field: "sensor"},
-    //         {title: "Status", field: "status"},
-    //         {title: "Created at", field: "createdAt"},
-    //         {title: "Created by", field: "createdBy"},
-    //         {title: "Assigned to", field: "assignedTo"},
-    //         {title: "Problem", field: "problem"},
-    //     ],
-    //     getData: getTicketTableData,
-    // },
-    //
-    // users: {
-    //     title: 'Users',
-    //     action: null,
-    //     filters: {},
-    // },
+    tickets: {
+        title: 'Tickets',
+        action: { label: 'Create Ticket', handler: () => openModal('tickets', 'create'), },
+        filters: {},
+        modal: {
+            create: { title: 'Create Ticket', method: createNewTicket },
+            edit:   { title: 'Edit Ticket', method: editTicket },
+            templateId: 'tickets',
+            prefill: {
+
+            }
+        },
+        columns: [
+            {title: "#", field: "tid"},
+            {title: "Bridge", field: "bridge"},
+            {title: "Sensor", field: "sensor"},
+            {title: "Status", field: "status"},
+            {title: "Created at", field: "createdAt"},
+            {title: "Created by", field: "createdBy"},
+            {title: "Assigned to", field: "assignedTo"},
+            {title: "Problem", field: "problem"},
+        ],
+        getData: getTicketTableData,
+    },
 };

@@ -1,4 +1,4 @@
-import {clearToken, getToken} from "./auth.js";
+import {clearToken, getToken, setToken} from "./auth.js";
 
 /**
  * Module to fetch and combine data from multiple JSON sources
@@ -22,6 +22,11 @@ async function request(method, path, body = null) {
         headers,
         body: body ? JSON.stringify(body) : null
     });
+
+    const refreshed = response.headers.get('X-New-Token');
+    if (refreshed) {
+        setToken(refreshed);
+    }
 
     if (response.status === 401) {
         clearToken();
@@ -123,6 +128,11 @@ export async function getSensorTableData() {
  * @returns {Promise<Array>} Combined ticket table data
  */
 export async function getTicketTableData() {
+    const tickets = await request('GET', '/tickets');
+
+    return tickets.map(ticket => ({
+
+    }));
 }
 
 export async function getObservatoryData(id) {
@@ -158,4 +168,12 @@ export async function createNewSensor(data) {
 
 export async function editSensor(id, data) {
     return request('PUT', `/sensors/${id}`, data);
+}
+
+export async function createNewTicket(data) {
+    return request('POST', `/tickets`, data);
+}
+
+export async function editTicket(id, data) {
+    return request('PUT', `/tickets/${id}`, data);
 }
