@@ -161,6 +161,39 @@
         </div>
     </div>
 
+    <div class="modal" id="ticket">
+        <div class="modal-card">
+            <div class="modal-header">
+                <span class="modal-title"></span>
+                <button class="modal-close">X</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-row">
+                    <label class="modal-label">Bridge<input name="observatory" class="modal-input" type="text"></label>
+                </div>
+                <div class="modal-row">
+                    <label class="modal-label">Problem<textarea name="problem" class="modal-input"></textarea></label>
+                </div>
+                <div class="modal-row">
+                    <label class="modal-label">Assigned to <select name="assignee" class="modal-input" data-prefill="maintenanceCrew"></select></label>
+                    <label class="modal-label">Status <select name="status" class="modal-input" data-mode="edit" data-prefill="ticketStatus"></select></label>
+                </div>
+                <div class="modal-row">
+                    <label class="modal-label">Notes <input name="notes" class="modal-input" type="text"></label>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <!-- Existing buttons (visible when NOT confirming) -->
+                <button class="btn reset-btn">Reset</button>
+                <button class="btn submit-btn">Submit</button>
+
+                <!-- Confirm buttons (visible only when confirming) -->
+                <button class="btn cancel-btn">Cancel</button>
+                <button class="btn approve-btn">Approve</button>
+            </div>
+        </div>
+    </div>
+
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>

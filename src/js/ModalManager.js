@@ -53,11 +53,16 @@ export async function openModal(viewKey, mode, data = {}, id = null) {
         }
     }
 
+    function getNestedValue(obj, path) {
+        return path.split('.').reduce((acc, key) => acc?.[key], obj);
+    }
+
     // Prefill data on edit mode
     if (mode === 'edit') {
         modal.querySelectorAll('.modal-input').forEach(input => {
-            if (data[input.name] != null) {
-                input.value = data[input.name];
+            const value = getNestedValue(data, input.name);
+            if (value != null) {
+                input.value = value;
             }
         });
     }

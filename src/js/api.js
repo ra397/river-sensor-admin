@@ -131,19 +131,22 @@ export async function getTicketTableData() {
     const tickets = await request('GET', '/tickets');
 
     return tickets.map(ticket => ({
-        tid: ticket.ticket_id,
-        bridge: ticket.observatory?.name ?? '',
+        id: ticket.ticket_id,
+        bridge: ticket.observatory ?? '',
         sensor: ticket.sensor_id ?? '',
         status: ticket.status,
         createdAt: ticket.created_at
             ? new Date(ticket.created_at).toLocaleDateString()
             : '',
-        createdBy: ticket.created_by?.fullname ?? '',
-        assignedTo: ticket.assignee?.fullname ?? '',
+        createdBy: ticket.created_by ?? '',
+        assignedTo: ticket.assignee ?? '',
         problem: ticket.problem ?? '',
     }));
 }
 
+export async function getTicketData(id) {
+    return request('GET', `/tickets/${id}`);
+}
 export async function getObservatoryData(id) {
     return request('GET', `/observatories/${id}`);
 }
@@ -161,6 +164,11 @@ export async function getSensorOptions(rowData) {
     }
 
     return ['', ...sensors];
+}
+
+export async function getMaintenanceCrew() {
+    const crew = await request('GET', '/users/role/maintenance');
+    return crew.map(item => item.fullname);
 }
 
 export async function createNewObservatory(data) {

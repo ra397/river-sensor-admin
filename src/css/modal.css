@@ -16,7 +16,8 @@
     background: white;
     border-radius: 8px;
     padding: 1.5em;
-    width: 460px;
+    min-width: 460px;
+    max-width: max-content;
     overflow-y: auto;
 }
 

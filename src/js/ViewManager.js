@@ -1,20 +1,7 @@
 import { table } from "../main.js";
 import { VIEWS } from "./ViewConfig.js";
-import { enableSearch } from "./search.js";
 import { openModal } from "./ModalManager.js";
-
-const filterState = {};
-const filterCounts = {};
-
-function resetFilterState(filters) {
-    for (const key of Object.keys(filterState)) delete filterState[key];
-    for (const key of Object.keys(filterCounts)) delete filterCounts[key];
-
-    for (const [key, filter] of Object.entries(filters)) {
-        filterState[key] = [...filter.options];
-        filterCounts[key] = filter.options.length;
-    }
-}
+import { resetFilterState, toggleFilterOption, applyFilters, enableSearch } from './filter.js';
 
 function renderNavbar(viewKey) {
     const navTabsEl = document.querySelector('.nav-tabs');
@@ -48,8 +35,6 @@ function renderFilters(view) {
     if (!container) return;
     container.innerHTML = '';
 
-    const filterFunc = buildFilterFunc(view.filters);
-
     for (const [key, filter] of Object.entries(view.filters)) {
         const groupEl = document.createElement('div');
         groupEl.className = 'filter-group';
@@ -72,15 +57,8 @@ function renderFilters(view) {
             checkbox.dataset.category = key;
 
             checkbox.addEventListener('change', (e) => {
-                const value = e.target.value;
-                const category = e.target.dataset.category;
-
-                if (e.target.checked) {
-                    filterState[category].push(value);
-                } else {
-                    filterState[category] = filterState[category].filter(v => v !== value);
-                }
-                table.setFilter(filterFunc);
+                toggleFilterOption(e.target.dataset.category, e.target.value, e.target.checked);
+                applyFilters();
             });
 
             label.append(checkbox, ' ', option);
@@ -148,44 +126,9 @@ export async function renderView(viewKey, tableData) {
         });
     }
 
-    enableSearch(document.getElementById('search-input'), table);
+    enableSearch(document.getElementById('search-input'));
     renderColumnToggles(view);
 
     const usernameEl = document.querySelector('#user-name');
     if (usernameEl) usernameEl.textContent = "PLACEHOLDER USERNAME";
-}
-
-// Filter Table Logic
-function parseRange(rangeStr) {
-    if (rangeStr.startsWith('< '))  return { type: 'lt', val: parseFloat(rangeStr.slice(2)) };
-    if (rangeStr.startsWith('> '))  return { type: 'gt', val: parseFloat(rangeStr.slice(2)) };
-    const parts = rangeStr.split(' - ');
-    if (parts.length === 2) return { type: 'between', lo: parseFloat(parts[0]), hi: parseFloat(parts[1]) };
-    return null;
-}
-
-function matchesRange(value, rangeStr) {
-    const r = parseRange(rangeStr);
-    if (!r) return false;
-    if (r.type === 'lt')      return value < r.val;
-    if (r.type === 'gt')      return value >= r.val;
-    if (r.type === 'between') return value >= r.lo && value <= r.hi;
-    return false;
-}
-
-function buildFilterFunc(filters) {
-    return function (data) {
-        for (const [key, filter] of Object.entries(filters)) {
-            const selected = filterState[key];
-            if (!selected || selected.length >= filterCounts[key]) continue;
-            const value = data[key];
-            if (filter.type === 'range') {
-                if (value == null || value === '') return false;
-                if (!selected.some(r => matchesRange(value, r))) return false;
-            } else {
-                if (!selected.includes(String(value ?? ''))) return false;
-            }
-        }
-        return true;
-    };
 }

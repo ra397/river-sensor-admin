@@ -4,7 +4,8 @@ import {
     getTicketTableData,
     getSensorOptions,
     getObservatoryData, getSensorData,
-    createNewObservatory, editObservatory, createNewSensor, editSensor, createNewTicket, editTicket
+    createNewObservatory, editObservatory, createNewSensor, editSensor, createNewTicket, editTicket, getTicketData,
+    getMaintenanceCrew
 } from "./api.js";
 import {datetimeNow, openModal} from "./ModalManager.js";
 
@@ -18,13 +19,13 @@ export const VIEWS = {
             templateId: 'observatory',
             prefill: {
                 stateOptions: ['', "IA", "IL", "WA", "CO"],
-                statusOptions: ['', 'active', 'maintenance', 'decommissioned'],
+                statusOptions: ['', 'active', 'defective', 'suspended', 'retired'],
                 sensorOptions: getSensorOptions,
                 upDownOptions: ['', 'U', 'D'],
             },
         },
         filters: {
-            status:       { label: 'Status',         type: 'includes',         options: ['active', 'maintenance', 'decommissioned'] },
+            status:       { label: 'Status',         type: 'includes',         options: ['active', 'defective', 'suspended', 'retired'] },
             rate:         { label: 'Rate',           type: 'includes',         options: ['2', '3', '4', '5'] },
             firmware:     { label: 'Firmware',       type: 'includes',         options: ['0.6', '0.86', '0.88', '0.89', '0.90', '1.00', '1.01', '6.1'] },
             no_pckt_days: { label: 'No Packet Days', type: 'range',            options: ['< 7', '7 - 14', '> 14'] },
@@ -96,13 +97,14 @@ export const VIEWS = {
         modal: {
             create: { title: 'Create Ticket', method: createNewTicket },
             edit:   { title: 'Edit Ticket', method: editTicket },
-            templateId: 'tickets',
+            templateId: 'ticket',
             prefill: {
-
+                maintenanceCrew: getMaintenanceCrew,
+                ticketStatus: ['assigned', 'suspended', 'done'],
             }
         },
         columns: [
-            {title: "#", field: "tid"},
+            {title: "#", field: "id"},
             {title: "Bridge", field: "bridge"},
             {title: "Sensor", field: "sensor"},
             {title: "Status", field: "status"},
@@ -112,5 +114,6 @@ export const VIEWS = {
             {title: "Problem", field: "problem"},
         ],
         getData: getTicketTableData,
+        getRowData: (id) => getTicketData(id),
     },
 };
