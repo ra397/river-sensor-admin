@@ -194,3 +194,8 @@ export async function createNewTicket(data) {
 export async function editTicket(id, data) {
     return request('PUT', `/tickets/${id}`, data);
 }
+
+export async function getReportData(variable, observatoryId, startDate, endDate) {
+    const params = new URLSearchParams({ bdt: startDate, edt: endDate });
+    return request('GET', `/reports/${variable}/${observatoryId}?${params}`);
+}

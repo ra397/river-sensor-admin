@@ -34,7 +34,10 @@ export const VIEWS = {
         },
         columns: [
             {title: 'id', field: 'id', visible: false},
-            {title: "Name", field: "name"},
+            {title: "Name", field: "name", formatter: (cell) => {
+                    cell.getElement().classList.add('clickable-cell');
+                    return cell.getValue();
+                }},
             {title: "NWSLI", field: "nwsli"},
             {title: "Status", field: "status"},
             {title: "Sensor", field: "sensor"},

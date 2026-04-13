@@ -43,3 +43,20 @@
     background-color: #d4e6f1;
     color: #000;
 }
+
+.clickable-cell {
+    cursor: pointer;
+    color: var(--light-blue);
+}
+
+.graph-icon-row {
+    padding-left: 0.5em;
+}
+
+.graph-icon-btn {
+    cursor: pointer;
+}
+
+.graph-icon-btn:hover {
+    background-color: var(--light-gray);
+}

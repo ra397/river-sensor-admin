@@ -1,0 +1,9 @@
+#plotly-container .plotly-card {
+    max-height: 90vh;
+    min-width: 90%;
+}
+
+#plotly-container .plotly-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}

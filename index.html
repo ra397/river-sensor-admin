@@ -19,7 +19,7 @@
 
     <div id="forgot-password-container">
       <div id="forgot-password-form">
-          <h2>Forgot Password</h2>
+          <h2>Reset Password</h2>
           <label for="forgot-email"></label><input type="email" id="forgot-email" placeholder="Email" required />
           <button type="button" id="get-otp-btn" class="btn submit-btn login-btn">Get One-Time Code</button>
           <span class="link back-to-login">Back to login</span>
@@ -191,6 +191,16 @@
                 <button class="btn cancel-btn">Cancel</button>
                 <button class="btn approve-btn">Approve</button>
             </div>
+        </div>
+    </div>
+
+    <div class="modal" id="plotly-container">
+        <div class="modal-card plotly-card">
+            <div class="modal-header">
+                <span class="modal-title">Observatory Data</span>
+                <button class="modal-close">X</button>
+            </div>
+            <div class="modal-body plotly-body"></div>
         </div>
     </div>
 

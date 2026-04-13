@@ -103,7 +103,6 @@ document.getElementById('reset-password-btn').addEventListener('click', async ()
 
 // Entry point
 if (isAuthenticated()) {
-    console.log("Authenticated");
     showApp();
     await initApp();
 } else {
