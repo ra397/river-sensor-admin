@@ -1,7 +1,7 @@
 import { renderView } from "./js/ViewManager.js";
-import { TabulatorFull as Tabulator } from "tabulator-tables";
 import {VIEWS} from "./js/ViewConfig.js";
 import {isAuthenticated, login, logout, requestOneTimeCode, submitNewPassword} from './js/auth.js';
+import './js/plotly.js';
 
 const loginPage = document.querySelector('#login-container');
 const forgotPasswordPage = document.querySelector('#forgot-password-container');
@@ -36,14 +36,6 @@ function showApp() {
     newPasswordPage.style.display = 'none';
     mainPage.style.display = 'flex';
 }
-
-export const table = new Tabulator("#table", {
-    height: '100%',
-    layout: "fitColumns",
-    pagination: true,
-    paginationSize: 50,
-    selectable: 1,
-});
 
 async function initApp() {
     const tableData = await VIEWS['observatories'].getData();

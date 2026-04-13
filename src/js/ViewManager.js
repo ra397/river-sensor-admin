@@ -1,4 +1,4 @@
-import { table } from "../main.js";
+import { table } from "./table.js"
 import { VIEWS } from "./ViewConfig.js";
 import { openModal } from "./ModalManager.js";
 import { resetFilterState, toggleFilterOption, applyFilters, enableSearch } from './filter.js';

@@ -1,6 +1,6 @@
 import { VIEWS } from './ViewConfig.js';
 import { refreshTable } from "./ViewManager.js";
-import { table } from "../main.js";
+import { table } from "./table.js";
 
 let initialData = null;
 

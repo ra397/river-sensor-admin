@@ -1,5 +1,4 @@
-
-import { table } from "../main.js";
+import { table } from "./table.js"
 
 let filterState = {};
 let filterCounts = {};
