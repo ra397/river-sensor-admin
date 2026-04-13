@@ -51,6 +51,8 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
         await login(email, password);
         showApp();
         await initApp();
+
+        sessionStorage.setItem('user-email', email);
     } catch {
         alert('Invalid email or password');
     }

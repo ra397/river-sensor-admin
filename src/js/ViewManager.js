@@ -177,5 +177,5 @@ export async function renderView(viewKey, tableData) {
     renderColumnToggles(view);
 
     const usernameEl = document.querySelector('#user-name');
-    if (usernameEl) usernameEl.textContent = "PLACEHOLDER USERNAME";
+    if (usernameEl) usernameEl.textContent = sessionStorage.getItem('user-email');
 }
