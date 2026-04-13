@@ -25,6 +25,11 @@ export async function openModal(viewKey, mode, data = {}, id = null) {
     // Wire closeModal to closeBtn
     const closeBtn = modal.querySelector('.modal-close');
     closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            closeModal();
+        }
+    });
 
     // Hide all the fields that do not belong to this mode
     modal.querySelectorAll('[data-mode]').forEach(el => {
