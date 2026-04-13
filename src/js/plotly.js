@@ -95,7 +95,22 @@ function buildTraces(config, data) {
 
 
 function buildLayout(config) {
+    const now = new Date();
     return {
+        shapes: [
+            {
+                type: 'line',
+                x0: now,
+                x1: now,
+                y0: 0,
+                y1: 1,
+                yref: 'paper',
+                line: {
+                    color: 'red',
+                    width: 2,
+                }
+            }
+        ],
         title: config.title,
         xaxis: { title: 'Date' },
         yaxis: { title: config.yaxis }
@@ -111,6 +126,8 @@ export async function showReports(observatoryId) {
 
     for (const [variable, config] of Object.entries(PLOT_CONFIG)) {
         const data = await getReportData(variable, observatoryId, startDate, endDate);
-        Plotly.newPlot(variable, buildTraces(config, data), buildLayout(config));
+        Plotly.newPlot(variable, buildTraces(config, data), buildLayout(config), {
+            displayModeBar: false,
+        });
     }
 }
