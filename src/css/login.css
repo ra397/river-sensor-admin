@@ -21,8 +21,8 @@
 #new-password-form {
     background: white;
     padding: 2rem;
-    border-radius: 12px;
     width: 350px;
+    box-shadow: 0 0 5px 4px var(--dark-gray);
 }
 
 #login-form input,
