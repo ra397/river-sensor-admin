@@ -118,59 +118,50 @@ export async function renderView(viewKey, tableData) {
 
     await renderTable(table, view.columns, tableData);
 
+    table.off('rowDblClick');
     table.off('rowClick');
-    table.off('cellClick');
 
     if (view.getRowData) {
-        table.on('rowClick', async (e, row) => {
-            if (viewKey === 'observatories') {
-                // Don't process if clicking on name cell (let cellClick handle it)
-                if (e.target.closest('.clickable-cell')) {
-                    return;
-                }
-
-                // Remove any existing graph icon row
-                document.querySelectorAll('.graph-icon-row').forEach(el => el.remove());
-
-                const rowElement = row.getElement();
-
-                // Toggle selection visually
-                const wasSelected = rowElement.classList.contains('row-selected');
-                document.querySelectorAll('.tabulator-row.row-selected').forEach(el => el.classList.remove('row-selected'));
-
-                if (!wasSelected) {
-                    rowElement.classList.add('row-selected');
-
-                    // Create and insert the graph icon row
-                    const iconRow = document.createElement('div');
-                    iconRow.className = 'graph-icon-row';
-                    iconRow.innerHTML = `
-                    <svg class="graph-icon-btn" width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M4 5V19C4 19.5523 4.44772 20 5 20H19" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M18 9L13 13.9999L10.5 11.4998L7 14.9998" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-              `;
-                    rowElement.parentNode.insertBefore(iconRow, rowElement.nextSibling);
-
-                    iconRow.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        const observatoryId = row.getData().id;
-                        showReports(observatoryId);
-                    });
-                }
-            } else {
-                const id = row.getData().id;
-                const rowData = await view.getRowData(id);
-                await openModal(viewKey, 'edit', rowData, id);
-            }
+        table.on('rowDblClick', async (e, row) => {
+            const id = row.getData().id;
+            const rowData = await view.getRowData(id);
+            await openModal(viewKey, 'edit', rowData, id);
         });
 
-        table.on('cellClick', async (e, cell) => {
-            if (viewKey === 'observatories' && cell.getColumn().getField() === 'name') {
-                const id = cell.getRow().getData().id;
-                const rowData = await view.getRowData(id);
-                await openModal(viewKey, 'edit', rowData, id);
+        table.on('rowClick', (e, row) => {
+            if (viewKey !== 'observatories') return;
+
+            const isSelected = row.isSelected();
+
+            document.querySelectorAll('.graph-icon-btn').forEach(el => {
+                el.remove();
+            });
+
+            if (isSelected) {
+                table.deselectRow(row);
+                return;
             }
+
+            table.deselectRow();
+            table.selectRow(row);
+
+            const cell = row.getCell('name');
+            const el = cell.getElement();
+
+            const graphIcon = `
+                <svg class="graph-icon-btn" width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M4 5V19C4 19.5523 4.44772 20 5 20H19" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M18 9L13 13.9999L10.5 11.4998L7 14.9998" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>`;
+
+            el.insertAdjacentHTML('beforeend', graphIcon);
+
+            const iconEl = el.querySelector('.graph-icon-btn');
+
+            iconEl.addEventListener('click', (e) => {
+                e.stopPropagation();
+                showReports(row.getData().id);
+            });
         });
     }
 
