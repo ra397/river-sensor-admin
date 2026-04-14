@@ -35,8 +35,9 @@
 
 .filter-title {
     display: flex;
-    justify-content: space-between;
     cursor: pointer;
+    align-items: center;
+    gap: 0.5em;
 }
 
 .chevron {
@@ -46,6 +47,10 @@
     stroke: black;
     stroke-width: 2;
     transition: transform 0.2s;
+}
+
+.chevron {
+    transition: transform 0.2s ease;
 }
 
 .filter-group.open .chevron {
@@ -60,4 +65,8 @@
 
 .filter-group.open .filter-options {
     display: flex;
+}
+
+.filter-option {
+    text-indent: 3ch;
 }

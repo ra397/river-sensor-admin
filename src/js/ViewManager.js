@@ -42,7 +42,7 @@ function renderFilters(view) {
 
         const titleEl = document.createElement('div');
         titleEl.className = 'filter-title';
-        titleEl.innerHTML = `<span>${filter.label}</span><svg class="chevron" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"></path></svg>`;
+        titleEl.innerHTML = `<svg class="chevron" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"></path></svg><span>${filter.label}</span>`;
         titleEl.addEventListener('click', () => groupEl.classList.toggle('open'));
         groupEl.appendChild(titleEl);
 
@@ -63,6 +63,7 @@ function renderFilters(view) {
             });
 
             label.append(checkbox, ' ', option);
+            label.className = 'filter-option';
             optionsEl.append(label);
         }
 
