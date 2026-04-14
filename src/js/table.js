@@ -5,5 +5,14 @@ export const table = new Tabulator("#table", {
     layout: "fitDataStretch",
     pagination: true,
     paginationSize: 50,
-    selectable: true,
+    selectable: 1,
+});
+
+const tableEl = document.getElementById("table");
+document.addEventListener("click", (e) => {
+    if (!tableEl.contains(e.target) && !e.target.closest('.modal')) {
+        table.deselectRow();
+        const existing = document.querySelector('.action-btn-wrapper');
+        if (existing) existing.remove();
+    }
 });

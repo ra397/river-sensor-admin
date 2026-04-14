@@ -90,6 +90,29 @@ function renderColumnToggles(view) {
     }
 }
 
+function renderRowActionButtons(view, rowData) {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'action-btn-wrapper';
+
+    const facade = document.createElement('span');
+    facade.className = 'action-btn facade';
+    facade.textContent = '...';
+    wrapper.appendChild(facade);
+
+    for (const action of view.rowActions.buttons) {
+        const btn = document.createElement('span');
+        btn.className = 'action-btn action-child';
+        btn.innerHTML = action.icon;
+        btn.addEventListener('click',(e) => {
+            e.stopPropagation();
+            action.handler(rowData);
+        });
+        wrapper.appendChild(btn);
+    }
+
+    return wrapper;
+}
+
 // Resets sorters and header filters
 function renderTable(table, columns, data) {
     table.setColumns(columns);
@@ -103,7 +126,7 @@ export function refreshTable(table, newData) {
 
 // Full page render (switching views)
 let previousView = null;
-export async function renderView(viewKey, tableData) {
+export function renderView(viewKey, tableData) {
     const view = VIEWS[viewKey];
     if (!view) return;
 
@@ -116,52 +139,21 @@ export async function renderView(viewKey, tableData) {
     resetFilterState(view.filters);
     renderFilters(view);
 
-    await renderTable(table, view.columns, tableData);
+    renderTable(table, view.columns, tableData);
 
-    table.off('rowDblClick');
     table.off('rowClick');
-
     if (view.getRowData) {
-        table.on('rowDblClick', async (e, row) => {
+        table.on('rowClick', async (e, row) => {
+            table.deselectRow();
+            row.select();
+
+            const existing = document.querySelector('.action-btn-wrapper');
+            if (existing) existing.remove();
+
             const id = row.getData().id;
             const rowData = await view.getRowData(id);
-            await openModal(viewKey, 'edit', rowData, id);
-        });
-
-        table.on('rowClick', (e, row) => {
-            if (viewKey !== 'observatories') return;
-
-            const isSelected = row.isSelected();
-
-            document.querySelectorAll('.graph-icon-btn').forEach(el => {
-                el.remove();
-            });
-
-            if (isSelected) {
-                table.deselectRow(row);
-                return;
-            }
-
-            table.deselectRow();
-            table.selectRow(row);
-
-            const cell = row.getCell('name');
-            const el = cell.getElement();
-
-            const graphIcon = `
-                <svg class="graph-icon-btn" width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M4 5V19C4 19.5523 4.44772 20 5 20H19" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M18 9L13 13.9999L10.5 11.4998L7 14.9998" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>`;
-
-            el.insertAdjacentHTML('beforeend', graphIcon);
-
-            const iconEl = el.querySelector('.graph-icon-btn');
-
-            iconEl.addEventListener('click', (e) => {
-                e.stopPropagation();
-                showReports(row.getData().id);
-            });
+            const cellEl = row.getCell(view.rowActions.column).getElement();
+            cellEl.appendChild(renderRowActionButtons(view, rowData));
         });
     }
 

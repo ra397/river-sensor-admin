@@ -1,0 +1,46 @@
+.action-btn-wrapper {
+    display: inline-flex;
+    overflow: hidden;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 8px;
+    cursor: pointer;
+    background: transparent;
+}
+
+.action-btn.facade {
+    transition: width 0.2s ease, opacity 0.15s ease, padding 0.2s ease;
+    width: auto;
+    opacity: 1;
+}
+
+.action-btn.action-child {
+    width: 0;
+    opacity: 0;
+    padding: 6px 0;
+    overflow: hidden;
+    transition: width 0.2s ease, opacity 0.15s ease, padding 0.2s ease;
+}
+
+.action-btn-wrapper:hover .action-btn.facade {
+    width: 0;
+    opacity: 0;
+    padding: 6px 0;
+}
+
+.action-btn-wrapper:hover .action-btn.action-child {
+    width: auto;
+    opacity: 1;
+    padding: 6px 8px;
+}
+
+.row-action-btn {
+    outline: 1px solid white;
+    border-radius: 2px;
+}

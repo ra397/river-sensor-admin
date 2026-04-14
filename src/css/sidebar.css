@@ -38,6 +38,11 @@
     cursor: pointer;
     align-items: center;
     gap: 0.5em;
+    user-select: none;
+}
+
+.filter-title:hover {
+    background: var(--light-gray);
 }
 
 .chevron {
@@ -69,4 +74,9 @@
 
 .filter-option {
     text-indent: 3ch;
+    user-select: none;
+}
+
+.filter-option:hover {
+    background: var(--light-gray);
 }
