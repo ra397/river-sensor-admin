@@ -21,6 +21,8 @@
     width: auto;
     opacity: 1;
     font-weight: bold;
+    outline-offset: -5px;
+    border-radius: 5px;
 }
 
 .action-btn.action-child {
