@@ -1,8 +1,8 @@
 .action-btn-wrapper {
     display: inline-flex;
-    overflow: hidden;
-    border-radius: 6px;
     transition: all 0.2s ease;
+    height: var(--line-height);
+    gap: 4px;
 }
 
 .action-btn {
@@ -12,12 +12,15 @@
     padding: 6px 8px;
     cursor: pointer;
     background: transparent;
+    outline: 1px solid white;
+    border-radius: 2px;
 }
 
 .action-btn.facade {
     transition: width 0.2s ease, opacity 0.15s ease, padding 0.2s ease;
     width: auto;
     opacity: 1;
+    font-weight: bold;
 }
 
 .action-btn.action-child {
@@ -29,9 +32,7 @@
 }
 
 .action-btn-wrapper:hover .action-btn.facade {
-    width: 0;
-    opacity: 0;
-    padding: 6px 0;
+    display: none;
 }
 
 .action-btn-wrapper:hover .action-btn.action-child {
@@ -40,7 +41,7 @@
     padding: 6px 8px;
 }
 
-.row-action-btn {
-    outline: 1px solid white;
-    border-radius: 2px;
-}
+/*.row-action-btn {*/
+/*    outline: 1px solid white;*/
+/*    border-radius: 2px;*/
+/*}*/

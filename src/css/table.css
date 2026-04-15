@@ -44,8 +44,22 @@
     color: #000;
 }
 
-.tabulator-row.tabulator-selected .tabulator-cell:has(.action-btn-wrapper) {
-    display: inline-flex !important;
+.tabulator-cell:has(.action-btn-wrapper) {
+    position: relative;
+    overflow: visible;
+}
+
+.action-btn-wrapper {
+    position: absolute;
+    right: 0;
+    top: 5px;
+    height: var(--line-height);
+    display: none;
     align-items: center;
-    justify-content: space-between;
+    background: inherit; /* covers the text behind it */
+    padding: 0 4px;
+}
+
+.tabulator-row.tabulator-selected .action-btn-wrapper {
+    display: inline-flex;
 }
