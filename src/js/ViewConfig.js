@@ -9,11 +9,15 @@ import {
 } from "./api.js";
 import {datetimeNow, openModal} from "./ModalManager.js";
 import {showReports} from "./plotly.js";
+import {openSamplingRateModal} from "./SamplingRateModal.js";
 
 export const VIEWS = {
     observatories: {
         title: 'Bridges',
-        action: { label: 'Create Bridge', handler: () => openModal('observatories', 'create') },
+        actions: [
+            { label: 'Create Bridge', handler: () => openModal('observatories', 'create') },
+            { label: 'Change Sampling Rate', handler: () => openSamplingRateModal() }
+        ],
         modal: {
             create: { title: 'Create Bridge', method: createNewObservatory },
             edit:   { title: 'Edit Bridge',   method: editObservatory },
@@ -79,7 +83,9 @@ export const VIEWS = {
 
     sensors: {
         title: 'Sensors',
-        action: { label: 'Create Sensor', handler: () => openModal('sensors', 'create'), },
+        actions: [
+            { label: 'Create Sensor', handler: () => openModal('sensors', 'create'), }
+        ],
         filters: {
             status:       { label: 'Status',         type: 'includes',         options: ['active', 'maintenance', 'decommissioned'] },
             rate:         { label: 'Rate',           type: 'includes',         options: ['2', '3', '4', '5'] },
@@ -122,7 +128,7 @@ export const VIEWS = {
 
     tickets: {
         title: 'Tickets',
-        action: { label: 'Create Ticket', handler: () => openModal('tickets', 'create'), },
+        actions: [{ label: 'Create Ticket', handler: () => openModal('tickets', 'create'), }],
         filters: {
             status:       { label: 'Status',         type: 'includes',         options: ['assigned', 'suspended', 'done'] },
         },

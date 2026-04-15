@@ -4,6 +4,11 @@
     justify-content: space-around;
 }
 
+#nav-action-btns {
+    display: flex;
+    gap: 1rem;
+}
+
 .nav-tabs {
     display: flex;
     gap: 1rem;

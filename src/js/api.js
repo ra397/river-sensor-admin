@@ -199,3 +199,10 @@ export async function getReportData(variable, observatoryId, startDate, endDate)
     const params = new URLSearchParams({ bdt: startDate, edt: endDate });
     return request('GET', `/reports/${variable}/${observatoryId}?${params}`);
 }
+
+export async function changeSamplingRates(sensorIds, samplingRate) {
+    return request('PUT', '/sensors/sampling-rate', {
+        sensor_ids: sensorIds,
+        sampling_rate: samplingRate
+    });
+}

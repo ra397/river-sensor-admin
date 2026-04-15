@@ -40,7 +40,7 @@
 
     <div id="main">
         <nav id="navbar">
-            <button id="nav-action-btn" class="btn open-btn"></button>
+            <div id="nav-action-btns"></div>
             <div class="nav-tabs"></div>
             <div class="nav-right">
                 <span id="user-name"></span>
@@ -201,6 +201,32 @@
                 <button class="modal-close">X</button>
             </div>
             <div class="modal-body plotly-body"></div>
+        </div>
+    </div>
+
+    <div class="modal" id="sampling-rate-modal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <span class="modal-title">Change Sampling Rate</span>
+                <button class="modal-close">X</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-row">
+                    <label class="modal-label">New Sampling Rate
+                        <input name="sampling_rate" class="modal-input" type="number" min="2" max="6" value="2">
+                    </label>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn submit-btn">Change Sampling Rate</button>
+            </div>
+            <div class="modal-confirm hidden">
+                <p class="confirm-message"></p>
+                <div class="modal-actions">
+                    <button class="btn cancel-btn">Cancel</button>
+                    <button class="btn approve-btn">Confirm</button>
+                </div>
+            </div>
         </div>
     </div>
 

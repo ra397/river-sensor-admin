@@ -83,3 +83,21 @@
     padding: 2px 4px;
     margin-bottom: 2px;
 }
+
+.modal-confirm {
+    margin-top: 1em;
+}
+
+.modal-confirm .confirm-message {
+    text-align: center;
+    margin-bottom: 1em;
+}
+
+.modal-confirm.hidden {
+    display: none;
+}
+
+.modal-confirm .approve-btn,
+.modal-confirm .cancel-btn {
+    display: inline-block;
+}

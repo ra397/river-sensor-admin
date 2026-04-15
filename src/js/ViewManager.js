@@ -23,12 +23,17 @@ function renderNavbar(viewKey) {
     }
 }
 
-function renderActionButton(view) {
-    const oldBtn = document.querySelector('#nav-action-btn');
-    const btn = oldBtn.cloneNode(true);
-    oldBtn.replaceWith(btn);
-    btn.textContent = view.action.label;
-    btn.addEventListener('click', () => view.action.handler());
+function renderActionButtons(view) {
+    const container = document.querySelector('#nav-action-btns');
+    container.innerHTML = '';
+    for (const action of view.actions) {
+        const btn = document.createElement('button');
+        btn.classList.add('btn');
+        btn.classList.add('open-btn');
+        btn.textContent = action.label;
+        btn.addEventListener('click', () => action.handler());
+        container.appendChild(btn);
+    }
 }
 
 function renderFilters(view) {
@@ -134,7 +139,7 @@ export function renderView(viewKey, tableData) {
     previousView = viewKey;
 
     renderNavbar(viewKey);
-    renderActionButton(view);
+    renderActionButtons(view);
 
     resetFilterState(view.filters);
     renderFilters(view);
