@@ -194,6 +194,41 @@
         </div>
     </div>
 
+    <div class="modal" id="user">
+        <div class="modal-card">
+            <div class="modal-header">
+                <span class="modal-title"></span>
+                <button class="modal-close">X</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-row" data-mode="create">
+                    <label class="modal-label">Email <input name="email" class="modal-input" type="email"></label>
+                    <label class="modal-label">Full Name <input name="fullname" class="modal-input" type="text"></label>
+                </div>
+                <div class="modal-row" data-mode="edit">
+                    <span class="user-display"></span>
+                </div>
+                <div class="modal-row permissions-row">
+                    <label class="modal-label">Permissions</label>
+                </div>
+                <div class="modal-row permissions-checkboxes">
+                    <label class="checkbox-label"><input name="create_bridge" class="modal-input" type="checkbox"> Create Bridge</label>
+                    <label class="checkbox-label"><input name="update_bridge" class="modal-input" type="checkbox"> Update Bridge</label>
+                    <label class="checkbox-label"><input name="create_sensor" class="modal-input" type="checkbox"> Create Sensor</label>
+                    <label class="checkbox-label"><input name="update_sensor" class="modal-input" type="checkbox"> Update Sensor</label>
+                    <label class="checkbox-label"><input name="sync_fields" class="modal-input" type="checkbox"> Sync Fields</label>
+                    <label class="checkbox-label"><input name="manage_permissions" class="modal-input" type="checkbox"> Manage Permissions</label>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn reset-btn">Reset</button>
+                <button class="btn submit-btn">Submit</button>
+                <button class="btn cancel-btn">Cancel</button>
+                <button class="btn approve-btn">Approve</button>
+            </div>
+        </div>
+    </div>
+
     <div class="modal" id="plotly-container">
         <div class="modal-card plotly-card">
             <div class="modal-header">

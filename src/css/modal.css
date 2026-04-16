@@ -46,6 +46,10 @@
     margin-bottom: 0.75em;
 }
 
+.modal-row.hidden {
+    display: none;
+}
+
 .modal-label {
     display: flex;
     flex-direction: column;
@@ -100,4 +104,27 @@
 .modal-confirm .approve-btn,
 .modal-confirm .cancel-btn {
     display: inline-block;
+}
+
+.user-display {
+    font-size: 0.9em;
+    color: var(--black);
+}
+
+.permissions-checkboxes {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    font-size: 0.9em;
+    cursor: pointer;
+}
+
+.checkbox-label input[type="checkbox"] {
+    width: auto;
 }

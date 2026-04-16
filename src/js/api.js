@@ -206,3 +206,27 @@ export async function changeSamplingRates(sensorIds, samplingRate) {
         sampling_rate: samplingRate
     });
 }
+
+export async function getUsersTableData() {
+    const users = await request('GET', '/users');
+
+    return users.map(user => ({
+        id: user.id,
+        email: user.email,
+        name: user.fullname ?? '',
+    }));
+}
+
+export async function createUser(data) {
+    return request('POST', '/users', data);
+}
+
+
+export async function getUserData(id) {
+    const users = await request('GET', '/users');
+    return users.find(user => user.id === id);
+}
+
+export async function updateUserPermissions(id, permissions) {
+    return request('PUT', `/users/${id}/permissions`, permissions);
+}

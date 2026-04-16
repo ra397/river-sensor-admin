@@ -5,7 +5,7 @@ import {
     getSensorOptions,
     getObservatoryData, getSensorData,
     createNewObservatory, editObservatory, createNewSensor, editSensor, createNewTicket, editTicket, getTicketData,
-    getMaintenanceCrew
+    getMaintenanceCrew, getUsersTableData, getUserData, updateUserPermissions, createUser
 } from "./api.js";
 import {datetimeNow, openModal} from "./ModalManager.js";
 import {showReports} from "./plotly.js";
@@ -166,4 +166,35 @@ export const VIEWS = {
             ]
         }
     },
+
+    users: {
+        title: 'Users',
+        actions: [{ label: 'Add User', handler: () => openModal('users', 'create') }],
+        filters: {},
+        modal: {
+            create: { title: 'Add User', method: createUser },
+            edit: { title: 'Edit Permissions', method: updateUserPermissions },
+            templateId: 'user',
+            prefill: {},
+        },
+        columns: [
+            { title: '#', field: 'id', width: 80 },
+            { title: 'Email', field: 'email' },
+            { title: 'Name', field: 'name' },
+        ],
+        getData: getUsersTableData,
+        getRowData: (id) => getUserData(id),
+        rowActions: {
+            column: 'id',
+            buttons: [
+                {
+                    icon: `<svg class="row-action-btn" width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M15.5 5.5L18.5 8.5" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M6 16L5 19L8 18L17.5 8.5L15.5 5.5L6 16Z" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>`,
+                    handler: (rowData) => openModal('users', 'edit', rowData, rowData.id),
+                }
+            ]
+        }
+    }
 };

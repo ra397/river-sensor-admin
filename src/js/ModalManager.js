@@ -15,7 +15,12 @@ export async function openModal(viewKey, mode, data = {}, id = null) {
     modal.classList.add('open');
 
     // Store initial state of form
-    initialData = mode === 'edit' ? { ...data } : getFormData(modal);
+    if (mode === 'edit') {
+        // Flatten permissions into the initial data for comparison
+        initialData = { ...data, ...data.permissions };
+    } else {
+        initialData = getFormData(modal);
+    }
 
     // Add title based on view and mode
     const title = view.modal[mode].title;
@@ -72,6 +77,22 @@ export async function openModal(viewKey, mode, data = {}, id = null) {
         });
     }
 
+    // Handle user display for users modal
+    const userDisplay = modal.querySelector('.user-display');
+    if (userDisplay && mode === 'edit') {
+        userDisplay.textContent = `${data.fullname ?? 'No name'} (${data.email})`;
+    }
+
+    // Handle checkbox prefill for permissions
+    if (data.permissions) {
+        for (const [key, value] of Object.entries(data.permissions)) {
+            const checkbox = modal.querySelector(`.modal-input[name="${key}"]`);
+            if (checkbox && checkbox.type === 'checkbox') {
+                checkbox.checked = value;
+            }
+        }
+    }
+
     // Create submit based on mode
     const submitBtn = modal.querySelector('.submit-btn');
     submitBtn.textContent = mode === 'edit' ? 'Save' : 'Submit';
@@ -87,7 +108,11 @@ export async function openModal(viewKey, mode, data = {}, id = null) {
     const resetBtn = modal.querySelector('.reset-btn');
     resetBtn.addEventListener('click', () => {
         modal.querySelectorAll('.modal-input').forEach(input => {
-            input.value = initialData[input.name];
+            if (input.type === 'checkbox') {
+                input.checked = initialData[input.name] ?? false;
+            } else {
+                input.value = initialData[input.name] ?? '';
+            }
         });
         submitBtn.disabled = true;
     });
@@ -136,7 +161,11 @@ function enterConfirm(modal, mode) {
             if (!input) continue;
             const orig = document.createElement('div');
             orig.className = 'original-value';
-            orig.textContent = initialData[key] || '(empty)';
+            if (input.type === 'checkbox') {
+                orig.textContent = initialData[key] ? '✓ Enabled' : '✗ Disabled';
+            } else {
+                orig.textContent = initialData[key] || '(empty)';
+            }
             input.parentNode.insertBefore(orig, input);
         }
     }
@@ -158,19 +187,48 @@ function exitConfirm(modal) {
 
 function getFormData(card) {
     const data = {};
+    const permissions = {};
+    const permissionFields = ['create_bridge', 'update_bridge', 'create_sensor', 'update_sensor', 'sync_fields', 'manage_permissions'];
+
     card.querySelectorAll('.modal-input').forEach(input => {
         if (input.closest('[data-mode].hidden')) return;
-        const value = input.value.trim();
-        data[input.name] = value === '' ? null : value;
+
+        const name = input.name;
+        let value;
+
+        if (input.type === 'checkbox') {
+            value = input.checked;
+        } else {
+            const trimmed = input.value.trim();
+            value = trimmed === '' ? null : trimmed;
+        }
+
+        if (permissionFields.includes(name)) {
+            permissions[name] = value;
+        } else {
+            data[name] = value;
+        }
     });
+
+    if (Object.keys(permissions).length > 0) {
+        data.permissions = permissions;
+    }
+
     return data;
 }
 
 function getDiff(initial, current) {
     const diff = {};
     for (const key of Object.keys(current)) {
-        if (current[key] !== String(initial[key] ?? '')) {
-            diff[key] = current[key];
+        const initialVal = initial[key];
+        const currentVal = current[key];
+
+        if (typeof currentVal === 'boolean') {
+            if (currentVal !== initialVal) {
+                diff[key] = currentVal;
+            }
+        } else if (currentVal !== String(initialVal ?? '')) {
+            diff[key] = currentVal;
         }
     }
     return diff;
@@ -184,10 +242,21 @@ export function closeModal() {
         el.classList.remove('hidden');
     });
     modal.querySelectorAll('.modal-input').forEach(input => {
-        input.value = '';
+        if (input.type === 'checkbox') {
+            input.checked = false;
+        } else {
+            input.value = '';
+        }
         input.disabled = false;
     });
     modal.querySelectorAll('.original-value').forEach(el => el.remove());
+
+    // Reset user display
+    const userDisplay = modal.querySelector('.user-display');
+    if (userDisplay) {
+        userDisplay.textContent = '';
+    }
+
     initialData = null;
 }
 
