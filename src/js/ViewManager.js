@@ -109,7 +109,7 @@ function renderRowActionButtons(view) {
         btn.className = 'action-btn action-child';
         btn.innerHTML = action.icon;
         btn.addEventListener('click',(e) => {
-            e.stopPropagation();
+            // e.stopPropagation();
             action.handler();
         });
         wrapper.appendChild(btn);
@@ -155,15 +155,15 @@ export function renderView(viewKey, tableData) {
             const existing = document.querySelector('.action-btn-wrapper');
             if (existing) existing.remove();
 
-            const id = row.getData().id;
-            const rowData = await view.getRowData(id);
-
             const cellEl = row.getCell(view.rowActions.column).getElement();
             cellEl.appendChild(renderRowActionButtons(view));
 
-            await populateModal(viewKey, 'edit', rowData, rowData.id);
-            if (viewKey === 'observatories') {
-                await updateReports(rowData.oid);
+            const isModalOpen = document.querySelector(`#${view.modal.templateId}`).classList.contains('open');
+            const isReportOpen = document.querySelector('#plotly-container').classList.contains('open');
+            if (isModalOpen || isReportOpen) {
+                const rowData = await view.getRowData(row.getData().id);
+                if (isModalOpen) await populateModal(viewKey, 'edit', rowData, rowData.id);
+                if (isReportOpen) await updateReports(rowData.oid);
             }
         });
     }
