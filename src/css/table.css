@@ -10,24 +10,24 @@
     min-height: 0;
 }
 
-#column-toggle-container {
+.toggle-container {
     display: flex;
     justify-content: right;
     padding-right: 1ch;
 }
 
-.column-toggle {
+.toggle-item {
     font-size: 0.9em;
     color: var(--light-blue);
     cursor: pointer;
     user-select: none;
 }
 
-.column-toggle.hidden {
+.toggle-item.hidden {
     color: var(--light-gray);
 }
 
-.column-toggle:not(:first-child)::before {
+.toggle-item:not(:first-child)::before {
     content: "|";
     padding-left: 0.5em;
     padding-right: 0.5em;

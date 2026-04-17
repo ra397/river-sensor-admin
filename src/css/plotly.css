@@ -1,16 +1,22 @@
 #plotly-container .plotly-card {
-    height: 90vh;
-    min-width: 450px !important;
-    width: 65% !important;
-    max-width: none !important;
-    overflow-y: hidden;
+    min-width: 450px;
+    width: fit-content;
+    max-width: 950px;
+    max-height: 90vh;
+    overflow-y: auto;
 }
 
 #plotly-container .plotly-body {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1em;
 }
 
 .plot {
-    height: 44vh;
+    width: 450px;
+    height: 300px;
+}
+
+.plot.hidden {
+    display: none;
 }

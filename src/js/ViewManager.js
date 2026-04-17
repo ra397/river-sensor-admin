@@ -78,14 +78,14 @@ function renderFilters(view) {
 }
 
 function renderColumnToggles(view) {
-    const container = document.querySelector('#column-toggle-container');
+    const container = document.querySelector('.toggle-container');
     if (!container) return;
     container.innerHTML = '';
 
     for (const column of view.columns) {
         if (column.visible === false) continue;
         const btn = document.createElement('span');
-        btn.className = 'column-toggle';
+        btn.className = 'toggle-item';
         btn.textContent = column.title;
         btn.addEventListener('click', () => {
             table.toggleColumn(column.field);

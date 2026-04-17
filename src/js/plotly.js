@@ -4,6 +4,8 @@ import {getReportData} from './api.js';
 const plotlyContainerEl = document.querySelector('#plotly-container');
 const plotlyCloseBtn = plotlyContainerEl.querySelector('.modal-close');
 
+let currentObservatoryId = null;
+
 export function showPlotly() {
     plotlyContainerEl.classList.add('open');
 }
@@ -37,6 +39,7 @@ const PLOT_CONFIG = {
             { key: 'pkt_cnt', xKey: 'dt', name: 'Packet Count', mode: 'markers', color: 'blue' }
         ],
         showXAxis: false,
+        visible: true,
     },
     'battery': {
         title: 'Battery',
@@ -47,6 +50,7 @@ const PLOT_CONFIG = {
             { key: 'min', xKey: 'dt', name: 'Min', mode: 'lines+markers', color: 'red' }
         ],
         showXAxis: false,
+        visible: true,
     },
     'measurements': {
         title: 'Measurements',
@@ -55,6 +59,7 @@ const PLOT_CONFIG = {
             { key: 'primary', xKey: 'validtime', name: 'Primary', mode: 'markers', color: 'blue' }
         ],
         showXAxis: true,
+        visible: true,
     },
     'moisture': {
         title: 'Moisture',
@@ -65,20 +70,60 @@ const PLOT_CONFIG = {
             { key: 'min', xKey: 'dt', name: 'Min', mode: 'lines+markers', color: 'red' }
         ],
         showXAxis: true,
+        visible: true,
     }
 };
+
+function buildPlotlyToggles() {
+    const container = document.querySelector('#plotly-container .toggle-container');
+
+    for (const [variable, config] of Object.entries(PLOT_CONFIG)) {
+        const toggleItem = document.createElement('span');
+        toggleItem.className = 'toggle-item';
+        toggleItem.dataset.plot = variable;
+        toggleItem.textContent = config.title;
+
+        toggleItem.addEventListener('click', async () => {
+            config.visible = !config.visible;
+            toggleItem.classList.toggle('hidden');
+
+            const container = document.querySelector('.plotly-body');
+            if (config.visible) {
+                // Create div and fetch data
+                const div = document.createElement('div');
+                div.className = 'plot';
+                div.id = variable;
+                container.appendChild(div);
+
+                const {startDate, endDate} = getDateRange();
+                const data = await getReportData(variable, currentObservatoryId, startDate, endDate);
+                Plotly.newPlot(variable, buildTraces(config, data), buildLayout(config, [toDateStr(startDate), toDateStr(endDate)], config.showXAxis), {
+                    displayModeBar: false,
+                    responsive: true,
+                });
+            } else {
+                // Remove the div entirely
+                const plotEl = document.getElementById(variable);
+                plotEl?.remove();
+            }
+        });
+
+        container.appendChild(toggleItem);
+    }
+}
 
 function buildPlotlyBody() {
     const container = document.querySelector('.plotly-body');
     container.innerHTML = '';
-    for (const id of Object.keys(PLOT_CONFIG)) {
+    for (const [id, config] of Object.entries(PLOT_CONFIG)) {
+        if (!config.visible) continue;  // Skip hidden plots
+
         const div = document.createElement('div');
         div.className = 'plot';
         div.id = id;
         container.appendChild(div);
     }
 }
-
 
 function buildTraces(config, data) {
     return config.traces.map(t => ({
@@ -141,11 +186,15 @@ function buildLayout(config, range, showXAxis = true) {
 
 
 export async function updateReports(observatoryId) {
+    currentObservatoryId = observatoryId;
+
     const { startDate, endDate } = getDateRange();
 
     buildPlotlyBody();
 
     for (const [variable, config] of Object.entries(PLOT_CONFIG)) {
+        if (config.visible === false) continue;  // Skip hidden plots
+
         const data = await getReportData(variable, observatoryId, startDate, endDate);
         Plotly.newPlot(variable, buildTraces(config, data), buildLayout(config, [toDateStr(startDate), toDateStr(endDate)], config.showXAxis), {
             displayModeBar: false,
@@ -159,3 +208,6 @@ function toDateStr(n) {
     const s = String(n);
     return `${s.slice(0,4)}-${s.slice(4,6)}-${s.slice(6,8)}`;
 }
+
+// Initialize
+buildPlotlyToggles();
