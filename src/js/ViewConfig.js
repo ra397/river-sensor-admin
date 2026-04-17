@@ -7,15 +7,15 @@ import {
     createNewObservatory, editObservatory, createNewSensor, editSensor, createNewTicket, editTicket, getTicketData,
     getMaintenanceCrew, getUsersTableData, getUserData, updateUserPermissions, createUser
 } from "./api.js";
-import {datetimeNow, openModal} from "./ModalManager.js";
-import {showReports} from "./plotly.js";
-import {openSamplingRateModal} from "./SamplingRateModal.js";
+import { datetimeNow, openModal, populateModal } from "./ModalManager.js";
+import { showPlotly } from "./plotly.js";
+import { openSamplingRateModal } from "./SamplingRateModal.js";
 
 export const VIEWS = {
     observatories: {
         title: 'Bridges',
         actions: [
-            { label: 'Create Bridge', handler: () => openModal('observatories', 'create') },
+            { label: 'Create Bridge', handler: () => populateModal('observatories', 'create') },
             { label: 'Change Sampling Rate', handler: () => openSamplingRateModal() }
         ],
         modal: {
@@ -68,14 +68,14 @@ export const VIEWS = {
                         <path d="M15.5 5.5L18.5 8.5" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         <path d="M6 16L5 19L8 18L17.5 8.5L15.5 5.5L6 16Z" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>`,
-                    handler: (rowData) => openModal('observatories', 'edit', rowData, rowData.id),
+                    handler: () => openModal('observatories'),
                 },
                 {
                     icon: `<svg class="row-action-btn" width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M4 5V19C4 19.5523 4.44772 20 5 20H19" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         <path d="M18 9L13 13.9999L10.5 11.4998L7 14.9998" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>`,
-                    handler: (rowData) => showReports(rowData.oid),
+                    handler: () => showPlotly(),
                 },
             ]
         }
@@ -84,7 +84,7 @@ export const VIEWS = {
     sensors: {
         title: 'Sensors',
         actions: [
-            { label: 'Create Sensor', handler: () => openModal('sensors', 'create'), }
+            { label: 'Create Sensor', handler: () => populateModal('sensors', 'create'), }
         ],
         filters: {
             status:       { label: 'Status',         type: 'includes',         options: ['active', 'maintenance', 'decommissioned'] },
@@ -120,7 +120,7 @@ export const VIEWS = {
                         <path d="M15.5 5.5L18.5 8.5" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         <path d="M6 16L5 19L8 18L17.5 8.5L15.5 5.5L6 16Z" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>`,
-                    handler: (rowData) => openModal('sensors', 'edit', rowData, rowData.id),
+                    handler: () => openModal('sensors'),
                 }
             ]
         }
@@ -128,7 +128,7 @@ export const VIEWS = {
 
     tickets: {
         title: 'Tickets',
-        actions: [{ label: 'Create Ticket', handler: () => openModal('tickets', 'create'), }],
+        actions: [{ label: 'Create Ticket', handler: () => populateModal('tickets', 'create'), }],
         filters: {
             status:       { label: 'Status',         type: 'includes',         options: ['assigned', 'suspended', 'done'] },
         },
@@ -161,7 +161,7 @@ export const VIEWS = {
                         <path d="M15.5 5.5L18.5 8.5" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         <path d="M6 16L5 19L8 18L17.5 8.5L15.5 5.5L6 16Z" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>`,
-                    handler: (rowData) => openModal('tickets', 'edit', rowData, rowData.id),
+                    handler: () => openModal('tickets'),
                 }
             ]
         }
@@ -169,7 +169,7 @@ export const VIEWS = {
 
     users: {
         title: 'Users',
-        actions: [{ label: 'Add User', handler: () => openModal('users', 'create') }],
+        actions: [{ label: 'Add User', handler: () => populateModal('users', 'create') }],
         filters: {},
         modal: {
             create: { title: 'Add User', method: createUser },
@@ -192,7 +192,7 @@ export const VIEWS = {
                       <path d="M15.5 5.5L18.5 8.5" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                       <path d="M6 16L5 19L8 18L17.5 8.5L15.5 5.5L6 16Z" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                   </svg>`,
-                    handler: (rowData) => openModal('users', 'edit', rowData, rowData.id),
+                    handler: () => openModal('users'),
                 }
             ]
         }

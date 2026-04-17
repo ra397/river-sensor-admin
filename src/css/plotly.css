@@ -1,7 +1,7 @@
 #plotly-container .plotly-card {
     height: 90vh;
-    min-width: 850px !important;
-    width: 90% !important;
+    min-width: 450px !important;
+    width: 65% !important;
     max-width: none !important;
     overflow-y: hidden;
 }

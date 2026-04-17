@@ -6,6 +6,7 @@
     z-index: 1000;
     justify-content: center;
     align-items: center;
+    pointer-events: none;
 }
 
 .modal.open {
@@ -19,6 +20,7 @@
     min-width: 460px;
     max-width: max-content;
     overflow-y: auto;
+    pointer-events: auto;
 }
 
 .modal-header {

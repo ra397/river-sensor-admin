@@ -4,7 +4,7 @@ import {getReportData} from './api.js';
 const plotlyContainerEl = document.querySelector('#plotly-container');
 const plotlyCloseBtn = plotlyContainerEl.querySelector('.modal-close');
 
-function showPlotly() {
+export function showPlotly() {
     plotlyContainerEl.classList.add('open');
 }
 
@@ -13,12 +13,6 @@ function hidePlotly() {
 }
 
 plotlyCloseBtn.addEventListener('click', hidePlotly);
-
-plotlyContainerEl.addEventListener('click', (e) => {
-    if (e.target === plotlyContainerEl) {
-        hidePlotly();
-    }
-});
 
 function getDateRange() {
     const endDate = new Date();
@@ -146,15 +140,13 @@ function buildLayout(config, range, showXAxis = true) {
 }
 
 
-export async function showReports(observatoryId) {
+export async function updateReports(observatoryId) {
     const { startDate, endDate } = getDateRange();
 
-    showPlotly();
     buildPlotlyBody();
 
     for (const [variable, config] of Object.entries(PLOT_CONFIG)) {
         const data = await getReportData(variable, observatoryId, startDate, endDate);
-        console.log(config);
         Plotly.newPlot(variable, buildTraces(config, data), buildLayout(config, [toDateStr(startDate), toDateStr(endDate)], config.showXAxis), {
             displayModeBar: false,
             responsive: true,

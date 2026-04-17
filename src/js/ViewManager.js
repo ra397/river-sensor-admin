@@ -1,8 +1,8 @@
 import { table } from "./table.js"
 import { VIEWS } from "./ViewConfig.js";
-import { openModal } from "./ModalManager.js";
+import { populateModal } from "./ModalManager.js";
 import { resetFilterState, toggleFilterOption, applyFilters, enableSearch } from './filter.js';
-import {showReports} from "./plotly.js";
+import {updateReports} from "./plotly.js";
 
 function renderNavbar(viewKey) {
     const navTabsEl = document.querySelector('.nav-tabs');
@@ -95,7 +95,7 @@ function renderColumnToggles(view) {
     }
 }
 
-function renderRowActionButtons(view, rowData) {
+function renderRowActionButtons(view) {
     const wrapper = document.createElement('div');
     wrapper.className = 'action-btn-wrapper';
 
@@ -110,7 +110,7 @@ function renderRowActionButtons(view, rowData) {
         btn.innerHTML = action.icon;
         btn.addEventListener('click',(e) => {
             e.stopPropagation();
-            action.handler(rowData);
+            action.handler();
         });
         wrapper.appendChild(btn);
     }
@@ -157,8 +157,14 @@ export function renderView(viewKey, tableData) {
 
             const id = row.getData().id;
             const rowData = await view.getRowData(id);
+
             const cellEl = row.getCell(view.rowActions.column).getElement();
-            cellEl.appendChild(renderRowActionButtons(view, rowData));
+            cellEl.appendChild(renderRowActionButtons(view));
+
+            await populateModal(viewKey, 'edit', rowData, rowData.id);
+            if (viewKey === 'observatories') {
+                await updateReports(rowData.oid);
+            }
         });
     }
 

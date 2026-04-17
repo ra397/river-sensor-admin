@@ -4,15 +4,13 @@ import { table } from "./table.js";
 
 let initialData = null;
 
-export async function openModal(viewKey, mode, data = {}, id = null) {
+export async function populateModal(viewKey, mode, data = {}, id = null) {
     const view = VIEWS[viewKey];
 
     // Deep clone modal so event listeners don't stack
     let oldModal = document.getElementById(view.modal.templateId);
     const modal = oldModal.cloneNode(true);
     oldModal.replaceWith(modal);
-    // Open modal
-    modal.classList.add('open');
 
     // Store initial state of form
     if (mode === 'edit') {
@@ -30,11 +28,6 @@ export async function openModal(viewKey, mode, data = {}, id = null) {
     // Wire closeModal to closeBtn
     const closeBtn = modal.querySelector('.modal-close');
     closeBtn.addEventListener('click', closeModal);
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            closeModal();
-        }
-    });
 
     // Hide all the fields that do not belong to this mode
     modal.querySelectorAll('[data-mode]').forEach(el => {
@@ -232,6 +225,12 @@ function getDiff(initial, current) {
         }
     }
     return diff;
+}
+
+export function openModal(viewKey) {
+    const view = VIEWS[viewKey];
+    const modal = document.getElementById(view.modal.templateId);
+    modal.classList.add('open');
 }
 
 export function closeModal() {
