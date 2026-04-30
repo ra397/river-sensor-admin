@@ -1,7 +1,14 @@
 import { table } from "./table.js"
 import { VIEWS } from "./ViewConfig.js";
 import { populateModal } from "./ModalManager.js";
-import { resetFilterState, toggleFilterOption, applyFilters, enableSearch } from './filter.js';
+import {
+    resetFilterState,
+    toggleFilterOption,
+    applyFilters,
+    enableSearch,
+    SHOW_ALL,
+    syncAllCheckboxDisabledStates
+} from './filter.js';
 import {updateReports} from "./plotly.js";
 
 function renderNavbar(viewKey) {
@@ -59,11 +66,11 @@ function renderFilters(view) {
             const checkbox = document.createElement('input');
             checkbox.type = 'checkbox';
             checkbox.value = option;
-            checkbox.checked = true;
-            checkbox.dataset.category = key;
+            checkbox.checked = (option === SHOW_ALL);   // only Show All checked initially
+            checkbox.dataset.filterCategory = key;       // matches data-filter-category in filter.js
 
             checkbox.addEventListener('change', (e) => {
-                toggleFilterOption(e.target.dataset.category, e.target.value, e.target.checked);
+                toggleFilterOption(e.target.dataset.filterCategory, e.target.value, e.target.checked);
                 applyFilters();
             });
 
@@ -75,6 +82,8 @@ function renderFilters(view) {
         groupEl.appendChild(optionsEl);
         container.appendChild(groupEl);
     }
+
+    syncAllCheckboxDisabledStates();   // grey out siblings on initial render
 }
 
 function renderColumnToggles(view) {

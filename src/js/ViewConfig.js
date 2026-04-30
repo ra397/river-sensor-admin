@@ -30,12 +30,12 @@ export const VIEWS = {
             },
         },
         filters: {
-            status:       { label: 'Status',         type: 'includes',         options: ['active', 'defective', 'suspended', 'retired'] },
-            rate:         { label: 'Rate',           type: 'includes',         options: ['2', '3', '4', '5'] },
-            firmware:     { label: 'Firmware',       type: 'includes',         options: ['0.6', '0.86', '0.88', '0.89', '0.90', '1.00', '1.01', '6.1'] },
-            no_pckt_days: { label: 'No Packet Days', type: 'range',            options: ['< 7', '7 - 14', '> 14'] },
-            voltage:      { label: 'Voltage',        type: 'range',            options: ['< 10', '10 - 11', '11 - 12', '12 - 13', '> 13'] },
-            tools:        { label: 'Tools',          type: 'includes',         options: ['Ticket', 'Public Note', 'Syncable'] },
+            status:       { label: 'Status',         type: 'includes',         options: ['Show All', 'active', 'defective', 'suspended', 'retired'] },
+            rate:         { label: 'Rate',           type: 'includes',         options: ['Show All', '2', '3', '4', '5'] },
+            firmware:     { label: 'Firmware',       type: 'includes',         options: ['Show All', '0.6', '0.86', '0.88', '0.89', '0.90', '1.00', '1.01', '6.1'] },
+            no_pckt_days: { label: 'No Packet Days', type: 'range',            options: ['Show All', '< 7', '7 - 14', '> 14'] },
+            voltage:      { label: 'Voltage',        type: 'range',            options: ['Show All', '< 10', '10 - 11', '11 - 12', '12 - 13', '> 13'] },
+            tools:        { label: 'Tools',          type: 'includes',         options: ['Show All', 'Ticket', 'Public Note'] },
         },
         columns: [
             {title: 'id', field: 'id', visible: false},
@@ -87,9 +87,9 @@ export const VIEWS = {
             { label: 'Create Sensor', handler: () => populateModal('sensors', 'create'), }
         ],
         filters: {
-            status:       { label: 'Status',         type: 'includes',         options: ['active', 'maintenance', 'decommissioned'] },
-            rate:         { label: 'Rate',           type: 'includes',         options: ['2', '3', '4', '5'] },
-            firmware:     { label: 'Firmware',       type: 'includes',         options: ['0.6', '0.86', '0.88', '0.89', '0.90', '1.00', '1.01', '6.1'] },
+            status:       { label: 'Status',         type: 'includes',         options: ['Show All', 'active', 'maintenance', 'decommissioned'] },
+            rate:         { label: 'Rate',           type: 'includes',         options: ['Show All', '2', '3', '4', '5'] },
+            firmware:     { label: 'Firmware',       type: 'includes',         options: ['Show All', '0.6', '0.86', '0.88', '0.89', '0.90', '1.00', '1.01', '6.1'] },
         },
         modal: {
             create: { title: 'Create Sensor', method: createNewSensor },
@@ -130,7 +130,7 @@ export const VIEWS = {
         title: 'Tickets',
         actions: [{ label: 'Create Ticket', handler: () => populateModal('tickets', 'create'), }],
         filters: {
-            status:       { label: 'Status',         type: 'includes',         options: ['assigned', 'suspended', 'done'] },
+            status:       { label: 'Status',         type: 'includes',         options: ['Show All', 'assigned', 'suspended', 'done'] },
         },
         modal: {
             create: { title: 'Create Ticket', method: createNewTicket },

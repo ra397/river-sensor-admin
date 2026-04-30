@@ -54,7 +54,8 @@ export async function getObservatoryTableData() {
         noPcktDays,
         wetnessAnomalies,
         misreads,
-        dailyMinVoltage
+        dailyMinVoltage,
+        tickets,
     ] = await Promise.all([
         request('GET', '/observatories'),
         request('GET', '/sensors'),
@@ -63,6 +64,7 @@ export async function getObservatoryTableData() {
         request('GET', '/packets/wetness-anomalies'),
         request('GET', '/packets/misreads'),
         request('GET', '/packets/daily-min-voltage'),
+        request('GET', '/tickets'),
     ]);
 
     const sensorMap = new Map(sensors.map(s => [s.sid, s]));
@@ -71,6 +73,15 @@ export async function getObservatoryTableData() {
     const wetnessMap = new Map(wetnessAnomalies.map(w => [w.oid, w.anomaly_percentage]));
     const misreadMap = new Map(misreads.map(m => [m.oid, m]));
     const voltageMap = new Map(dailyMinVoltage.map(v => [v.sid, v.minV_14]));
+
+    // Group tickets by observatory name
+    const ticketsMap = new Map();
+    for (const ticket of tickets) {
+        if (!ticketsMap.has(ticket.observatory)) {
+            ticketsMap.set(ticket.observatory, []);
+        }
+        ticketsMap.get(ticket.observatory).push(ticket);
+    }
 
     return observatories.map(obs => {
         const sensor = sensorMap.get(obs.sid);
@@ -93,6 +104,8 @@ export async function getObservatoryTableData() {
             wet: wetnessMap.get(obs.oid) ?? '',
             misread: misread ? `${misread.percent}/${misread.lastRead}` : '',
             voltage: obs.sid ? voltageMap.get(obs.sid) ?? '' : '',
+            public_note: obs.public_note ?? null,
+            tickets: ticketsMap.get(obs.name) ?? [],
         };
     });
 }
