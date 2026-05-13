@@ -1,11 +1,25 @@
-import {clearToken, getToken, setToken} from "./auth.js";
+import { clearToken, getToken, setToken } from './auth.js';
+import apiConfig from './api-config.json';
 
-/**
- * Module to fetch and combine data from multiple JSON sources
- * for different tables.
- */
+const baseUrl = apiConfig[apiConfig.mode];
 
-async function request(method, path, body = null) {
+function buildUrl(endpoint, pathParams = {}, queryParams = {}) {
+    let path = endpoint;
+
+    for (const [key, value] of Object.entries(pathParams)) {
+        path = path.replace(`:${key}`, encodeURIComponent(value));
+    }
+
+    const query = new URLSearchParams(queryParams).toString();
+    return `${baseUrl}${path}${query ? `?${query}` : ''}`;
+}
+
+async function request(name, { pathParams = {}, queryParams = {}, body = null } = {}) {
+    const config = apiConfig.requests[name];
+    if (!config) {
+        throw new Error(`Unknown request: ${name}`);
+    }
+
     const headers = {};
     const token = getToken();
 
@@ -17,10 +31,12 @@ async function request(method, path, body = null) {
         headers['Content-Type'] = 'application/json';
     }
 
-    const response = await fetch(`/hydroiowa/api${path}`, {
-        method,
+    const url = buildUrl(config.endpoint, pathParams, queryParams);
+
+    const response = await fetch(url, {
+        method: config.method,
         headers,
-        body: body ? JSON.stringify(body) : null
+        body: body ? JSON.stringify(body) : null,
     });
 
     const refreshed = response.headers.get('X-New-Token');
@@ -30,22 +46,16 @@ async function request(method, path, body = null) {
 
     if (response.status === 401) {
         clearToken();
-        window.location.reload(); // Forces back to login view
+        window.location.reload();
     }
 
     if (!response.ok) {
-        throw new Error(`${method} ${path} failed: ${response.status}`);
+        throw new Error(`${name} failed: ${response.status}`);
     }
 
     return response.json();
 }
 
-/**
- * Fetches all data sources and combines them into a single array
- * suitable for the observatory table.
- *
- * @returns {Promise<Array>} Combined observatory table data
- */
 export async function getObservatoryTableData() {
     const [
         observatories,
@@ -57,24 +67,23 @@ export async function getObservatoryTableData() {
         dailyMinVoltage,
         tickets,
     ] = await Promise.all([
-        request('GET', '/observatories'),
-        request('GET', '/sensors'),
-        request('GET', '/packets/latest_observation'),
-        request('GET', '/packets/no-packet-days'),
-        request('GET', '/packets/wetness-anomalies'),
-        request('GET', '/packets/misreads'),
-        request('GET', '/packets/daily-min-voltage'),
-        request('GET', '/tickets'),
+        request('observatories'),
+        request('sensors'),
+        request('latest_observation'),
+        request('no_packet_days'),
+        request('wetness_anomalies'),
+        request('misreads'),
+        request('daily_min_voltage'),
+        request('tickets'),
     ]);
 
-    const sensorMap = new Map(sensors.map(s => [s.sid, s]));
+    const sensorMap    = new Map(sensors.map(s => [s.sid, s]));
     const latestObsMap = new Map(latestObservations.map(lo => [lo.oid, lo.dt_time]));
-    const noPcktMap = new Map(noPcktDays.map(np => [np.oid, np.days]));
-    const wetnessMap = new Map(wetnessAnomalies.map(w => [w.oid, w.anomaly_percentage]));
-    const misreadMap = new Map(misreads.map(m => [m.oid, m]));
-    const voltageMap = new Map(dailyMinVoltage.map(v => [v.sid, v.minV_14]));
+    const noPcktMap    = new Map(noPcktDays.map(np => [np.oid, np.days]));
+    const wetnessMap   = new Map(wetnessAnomalies.map(w => [w.oid, w.anomaly_percentage]));
+    const misreadMap   = new Map(misreads.map(m => [m.oid, m]));
+    const voltageMap   = new Map(dailyMinVoltage.map(v => [v.sid, v.minV_14]));
 
-    // Group tickets by observatory name
     const ticketsMap = new Map();
     for (const ticket of tickets) {
         if (!ticketsMap.has(ticket.observatory)) {
@@ -84,9 +93,9 @@ export async function getObservatoryTableData() {
     }
 
     return observatories.map(obs => {
-        const sensor = sensorMap.get(obs.sid);
+        const sensor   = sensorMap.get(obs.sid);
         const latestDt = latestObsMap.get(obs.oid);
-        const misread = misreadMap.get(obs.oid);
+        const misread  = misreadMap.get(obs.oid);
 
         return {
             id: obs.oid,
@@ -110,14 +119,8 @@ export async function getObservatoryTableData() {
     });
 }
 
-/**
- * Fetches all data sources and combines them into a single array
- * suitable for the sensor table.
- *
- * @returns {Promise<Array>} Combined sensor table data
- */
 export async function getSensorTableData() {
-    const sensors = await request('GET', '/sensors');
+    const sensors = await request('sensors');
 
     return sensors.map(sensor => ({
         id: sensor.sid,
@@ -134,14 +137,8 @@ export async function getSensorTableData() {
     }));
 }
 
-/**
- * Fetches all data sources and combines them into a single array
- * suitable for the ticket table.
- *
- * @returns {Promise<Array>} Combined ticket table data
- */
 export async function getTicketTableData() {
-    const tickets = await request('GET', '/tickets');
+    const tickets = await request('tickets');
 
     return tickets.map(ticket => ({
         id: ticket.ticket_id,
@@ -158,18 +155,19 @@ export async function getTicketTableData() {
 }
 
 export async function getTicketData(id) {
-    return request('GET', `/tickets/${id}`);
+    return request('ticket', { pathParams: { id } });
 }
+
 export async function getObservatoryData(id) {
-    return request('GET', `/observatories/${id}`);
+    return request('observatory', { pathParams: { id } });
 }
 
 export async function getSensorData(id) {
-    return request('GET', `/sensors/${id}`);
+    return request('sensor', { pathParams: { id } });
 }
 
 export async function getSensorOptions(rowData) {
-    const sensors = await request('GET', '/unused-sensors');
+    const sensors = await request('unused_sensors');
 
     const currentSensor = rowData?.sid;
     if (currentSensor) {
@@ -180,48 +178,52 @@ export async function getSensorOptions(rowData) {
 }
 
 export async function getMaintenanceCrew() {
-    const crew = await request('GET', '/users/role/maintenance');
+    const crew = await request('maintenance_crew');
     return crew.map(item => item.fullname);
 }
 
 export async function createNewObservatory(data) {
-    return request('POST', `/observatories`, data);
+    return request('create_observatory', { body: data });
 }
 
 export async function editObservatory(id, data) {
-    return request('PUT', `/observatories/${id}`, data);
+    return request('edit_observatory', { pathParams: { id }, body: data });
 }
 
 export async function createNewSensor(data) {
-    return request('POST', `/sensors`, data);
+    return request('create_sensor', { body: data });
 }
 
 export async function editSensor(id, data) {
-    return request('PUT', `/sensors/${id}`, data);
+    return request('edit_sensor', { pathParams: { id }, body: data });
 }
 
 export async function createNewTicket(data) {
-    return request('POST', `/tickets`, data);
+    return request('create_ticket', { body: data });
 }
 
 export async function editTicket(id, data) {
-    return request('PUT', `/tickets/${id}`, data);
+    return request('edit_ticket', { pathParams: { id }, body: data });
 }
 
 export async function getReportData(variable, observatoryId, startDate, endDate) {
-    const params = new URLSearchParams({ bdt: startDate, edt: endDate });
-    return request('GET', `/reports/${variable}/${observatoryId}?${params}`);
+    return request('report', {
+        pathParams: { variable, observatoryId },
+        queryParams: { bdt: startDate, edt: endDate },
+    });
 }
 
 export async function changeSamplingRates(sensorIds, samplingRate) {
-    return request('PUT', '/sensors/sampling-rate', {
-        sensor_ids: sensorIds,
-        sampling_rate: samplingRate
+    return request('change_sampling_rates', {
+        body: {
+            sensor_ids: sensorIds,
+            sampling_rate: samplingRate,
+        },
     });
 }
 
 export async function getUsersTableData() {
-    const users = await request('GET', '/users');
+    const users = await request('users');
 
     return users.map(user => ({
         id: user.id,
@@ -231,15 +233,14 @@ export async function getUsersTableData() {
 }
 
 export async function createUser(data) {
-    return request('POST', '/users', data);
+    return request('create_user', { body: data });
 }
 
-
 export async function getUserData(id) {
-    const users = await request('GET', '/users');
+    const users = await request('users');
     return users.find(user => user.id === id);
 }
 
 export async function updateUserPermissions(id, permissions) {
-    return request('PUT', `/users/${id}/permissions`, permissions);
+    return request('update_user_permissions', { pathParams: { id }, body: permissions });
 }

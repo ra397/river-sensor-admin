@@ -1,0 +1,115 @@
+{
+  "mode": "dev_api",
+  "dev_api": "//s-iihr80.iihr.uiowa.edu/hydroiowa/api",
+  "prod_api": "//hydroiowa.org/api2",
+  "requests": {
+    "observatories": {
+      "method": "GET",
+      "endpoint": "/observatories"
+    },
+    "observatory": {
+      "method": "GET",
+      "endpoint": "/observatories/:id"
+    },
+    "create_observatory": {
+      "method": "POST",
+      "endpoint": "/observatories"
+    },
+    "edit_observatory": {
+      "method": "PUT",
+      "endpoint": "/observatories/:id"
+    },
+    "sensors": {
+      "method": "GET",
+      "endpoint": "/sensors"
+    },
+    "sensor": {
+      "method": "GET",
+      "endpoint": "/sensors/:id"
+    },
+    "unused_sensors": {
+      "method": "GET",
+      "endpoint": "/unused-sensors"
+    },
+    "create_sensor": {
+      "method": "POST",
+      "endpoint": "/sensors"
+    },
+    "edit_sensor": {
+      "method": "PUT",
+      "endpoint": "/sensors/:id"
+    },
+    "change_sampling_rates": {
+      "method": "PUT",
+      "endpoint": "/sensors/sampling-rate"
+    },
+    "latest_observation": {
+      "method": "GET",
+      "endpoint": "/packets/latest_observation"
+    },
+    "no_packet_days": {
+      "method": "GET",
+      "endpoint": "/packets/no-packet-days"
+    },
+    "wetness_anomalies": {
+      "method": "GET",
+      "endpoint": "/packets/wetness-anomalies"
+    },
+    "misreads": {
+      "method": "GET",
+      "endpoint": "/packets/misreads"
+    },
+    "daily_min_voltage": {
+      "method": "GET",
+      "endpoint": "/packets/daily-min-voltage"
+    },
+    "tickets": {
+      "method": "GET",
+      "endpoint": "/tickets"
+    },
+    "ticket": {
+      "method": "GET",
+      "endpoint": "/tickets/:id"
+    },
+    "create_ticket": {
+      "method": "POST",
+      "endpoint": "/tickets"
+    },
+    "edit_ticket": {
+      "method": "PUT",
+      "endpoint": "/tickets/:id"
+    },
+    "users": {
+      "method": "GET",
+      "endpoint": "/users"
+    },
+    "maintenance_crew": {
+      "method": "GET",
+      "endpoint": "/users/role/maintenance"
+    },
+    "create_user": {
+      "method": "POST",
+      "endpoint": "/users"
+    },
+    "update_user_permissions": {
+      "method": "PUT",
+      "endpoint": "/users/:id/permissions"
+    },
+    "report": {
+      "method": "GET",
+      "endpoint": "/reports/:variable/:observatoryId"
+    },
+    "login": {
+      "method": "POST",
+      "endpoint": "/login"
+    },
+    "forgot_password": {
+      "method": "POST",
+      "endpoint": "/forgot-password"
+    },
+    "reset_password": {
+      "method": "POST",
+      "endpoint": "/reset-password"
+    }
+  }
+}

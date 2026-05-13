@@ -1,10 +1,13 @@
 import { defineConfig } from 'vite'
 
 export default defineConfig({
-    base: '/hydroiowa/',
+    base: './',
+    build: {
+        sourcemap: true,
+    },
     server: {
         proxy: {
-            '/hydroiowa/api': {
+            '/api2': {
                 target: 'https://s-iihr80.iihr.uiowa.edu',
                 changeOrigin: true,
                 secure: false,
