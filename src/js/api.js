@@ -1,7 +1,8 @@
+import { apiConfig } from "./importApiConfig.js";
 import { clearToken, getToken, setToken } from './auth.js';
-import apiConfig from './api-config.json';
 
-const baseUrl = apiConfig[apiConfig.mode];
+// const baseUrl = apiConfig[apiConfig.mode];
+const baseUrl = 'api2';
 
 function buildUrl(endpoint, pathParams = {}, queryParams = {}) {
     let path = endpoint;
@@ -15,7 +16,7 @@ function buildUrl(endpoint, pathParams = {}, queryParams = {}) {
 }
 
 async function request(name, { pathParams = {}, queryParams = {}, body = null } = {}) {
-    const config = apiConfig.requests[name];
+    const config = apiConfig['requests'][name];
     if (!config) {
         throw new Error(`Unknown request: ${name}`);
     }
@@ -159,11 +160,13 @@ export async function getTicketData(id) {
 }
 
 export async function getObservatoryData(id) {
-    return request('observatory', { pathParams: { id } });
+    const data = await request('observatory', { pathParams: { id } });
+    return { ...data, id: data.oid };
 }
 
 export async function getSensorData(id) {
-    return request('sensor', { pathParams: { id } });
+    const data = await request('sensor', { pathParams: { id } });
+    return { ...data, id };
 }
 
 export async function getSensorOptions(rowData) {
@@ -187,6 +190,7 @@ export async function createNewObservatory(data) {
 }
 
 export async function editObservatory(id, data) {
+    console.log(id, data);
     return request('edit_observatory', { pathParams: { id }, body: data });
 }
 
@@ -195,6 +199,7 @@ export async function createNewSensor(data) {
 }
 
 export async function editSensor(id, data) {
+    console.log(id, data);
     return request('edit_sensor', { pathParams: { id }, body: data });
 }
 
