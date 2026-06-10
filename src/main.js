@@ -39,7 +39,7 @@ function showApp() {
 
 async function initApp() {
     const tableData = await VIEWS['observatories'].getData();
-    await renderView('observatories', tableData);
+    renderView('observatories', tableData);
 }
 
 // Login form handler
