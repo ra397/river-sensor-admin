@@ -134,6 +134,8 @@ export async function populateModal(viewKey, mode, data = {}, id = null) {
     cancelBtn.addEventListener('click', () => {
         exitConfirm(modal);
     });
+
+    modal.classList.add('open');
 }
 
 // --- Confirmation flow ---
