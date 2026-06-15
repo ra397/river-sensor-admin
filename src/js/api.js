@@ -1,8 +1,8 @@
 import { apiConfig } from "./importApiConfig.js";
 import { clearToken, getToken, setToken } from './auth.js';
 
-// const baseUrl = apiConfig[apiConfig.mode];
-const baseUrl = 'api2';
+const baseUrl = apiConfig[apiConfig.mode];
+// const baseUrl = 'api2';
 
 function buildUrl(endpoint, pathParams = {}, queryParams = {}) {
     let path = endpoint;
@@ -156,7 +156,8 @@ export async function getTicketTableData() {
 }
 
 export async function getTicketData(id) {
-    return request('ticket', { pathParams: { id } });
+    const data = await request('ticket', { pathParams: { id } });
+    return { ...data, id: data.ticket_id };
 }
 
 export async function getObservatoryData(id) {
