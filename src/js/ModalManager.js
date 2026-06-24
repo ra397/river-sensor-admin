@@ -94,6 +94,7 @@ export async function populateModal(viewKey, mode, data = {}, id = null) {
     // Enable submit when form differs from initial
     const inputHandler = () => {
         const diff = getDiff(initialData, getFormData(modal));
+        console.log(diff);
         submitBtn.disabled = Object.keys(diff).length === 0;
     };
     modal.addEventListener('input', inputHandler);
@@ -222,8 +223,13 @@ function getDiff(initial, current) {
             if (currentVal !== initialVal) {
                 diff[key] = currentVal;
             }
-        } else if (currentVal !== String(initialVal ?? '')) {
-            diff[key] = currentVal;
+        } else {
+            // Normalize both values: null/undefined become empty string for comparison
+            const normalizedInitial = String(initialVal ?? '');
+            const normalizedCurrent = String(currentVal ?? '');
+            if (normalizedCurrent !== normalizedInitial) {
+                diff[key] = currentVal;
+            }
         }
     }
     return diff;
