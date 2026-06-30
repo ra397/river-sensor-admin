@@ -6,4 +6,6 @@ try {
     console.error(e);
 }
 
-export { apiConfig };
+const baseUrl = import.meta.env.VITE_API_BASE;
+
+export { apiConfig, baseUrl };

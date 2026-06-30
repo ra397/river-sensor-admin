@@ -8,7 +8,7 @@ export default defineConfig({
     server: {
         proxy: {
             '/api2': {
-                target: 'https://hydroiowa.org',
+                target: 'http://localhost:8080',
                 changeOrigin: true,
                 secure: false,
             },

@@ -1,8 +1,5 @@
-import { apiConfig } from "./importApiConfig.js";
+import { baseUrl, apiConfig } from "./importApiConfig.js";
 import { clearToken, getToken, setToken } from './auth.js';
-
-const baseUrl = apiConfig[apiConfig.mode];
-// const baseUrl = 'api2';
 
 function buildUrl(endpoint, pathParams = {}, queryParams = {}) {
     let path = endpoint;
