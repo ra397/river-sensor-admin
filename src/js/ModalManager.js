@@ -219,11 +219,7 @@ function getDiff(initial, current) {
         const initialVal = initial[key];
         const currentVal = current[key];
 
-        if (key === 'sync_ifis') {
-            if (currentVal === true) {
-                diff[key] = currentVal;
-            }
-        } else if (typeof currentVal === 'boolean') {
+        if (typeof currentVal === 'boolean') {
             if (currentVal !== initialVal) {
                 diff[key] = currentVal;
             }
@@ -235,6 +231,9 @@ function getDiff(initial, current) {
                 diff[key] = currentVal;
             }
         }
+    }
+    if (current?.['sync_ifis']) {
+        diff['status'] = current['status'];
     }
     return diff;
 }

@@ -1,5 +1,5 @@
 import Plotly from 'plotly.js-dist-min';
-import {getReportData} from './api.js';
+import {getBatteryReportData, getReportData} from './api.js';
 
 const plotlyContainerEl = document.querySelector('#plotly-container');
 const plotlyCloseBtn = plotlyContainerEl.querySelector('.modal-close');
@@ -16,10 +16,10 @@ function hidePlotly() {
 
 plotlyCloseBtn.addEventListener('click', hidePlotly);
 
-function getDateRange() {
+function getDateRange(yearsBack = 1) {
     const endDate = new Date();
     const startDate = new Date();
-    startDate.setFullYear(startDate.getFullYear() - 1);
+    startDate.setFullYear(startDate.getFullYear() - yearsBack);
 
     const format = (date) => {
         const year = date.getFullYear();
@@ -46,11 +46,14 @@ const PLOT_CONFIG = {
         yaxis: 'Voltage (V)',
         traces: [
             { key: 'avg', xKey: 'dt', name: 'Average', mode: 'lines+markers', color: 'blue' },
-            { key: 'max', xKey: 'dt', name: 'Max', mode: 'lines+markers', color: 'green', },
+            { key: 'max', xKey: 'dt', name: 'Max', mode: 'lines+markers', color: 'green' },
             { key: 'min', xKey: 'dt', name: 'Min', mode: 'lines+markers', color: 'red' }
         ],
         showXAxis: false,
         visible: true,
+        yearsApi: true,   // use the new years-based endpoint
+        yearsBack: 3,     // history to request
+        plotYearsBack: 1,
     },
     'measurements': {
         title: 'Measurements',
@@ -95,12 +98,7 @@ function buildPlotlyToggles() {
                 div.id = variable;
                 container.appendChild(div);
 
-                const {startDate, endDate} = getDateRange();
-                const data = await getReportData(variable, currentObservatoryId, startDate, endDate);
-                Plotly.newPlot(variable, buildTraces(config, data), buildLayout(config, [toDateStr(startDate), toDateStr(endDate)], config.showXAxis), {
-                    displayModeBar: false,
-                    responsive: true,
-                });
+                await renderPlot(variable, config, currentObservatoryId);
             } else {
                 // Remove the div entirely
                 const plotEl = document.getElementById(variable);
@@ -184,22 +182,37 @@ function buildLayout(config, range, showXAxis = true) {
     };
 }
 
+async function renderPlot(variable, config, observatoryId) {
+    let yearsBack = config.yearsBack ?? 1;
+    let plotYearsBack = config.plotYearsBack ?? yearsBack; // Fallback to API range if not defined
+
+    // Fetch API Data (allows up to 3 years if configured)
+    const { startDate, endDate } = getDateRange(yearsBack);
+
+    // Determine plot range (forces battery to only show 1 year)
+    const plotRangeDates = getDateRange(plotYearsBack);
+
+    const data = config.yearsApi
+        ? await getBatteryReportData(observatoryId, yearsBack)
+        : await getReportData(variable, observatoryId, startDate, endDate);
+
+    Plotly.newPlot(
+        variable,
+        buildTraces(config, data),
+        buildLayout(config, [toDateStr(plotRangeDates.startDate), toDateStr(plotRangeDates.endDate)], config.showXAxis),
+        { displayModeBar: false, responsive: true }
+    );
+}
+
+
 
 export async function updateReports(observatoryId) {
     currentObservatoryId = observatoryId;
-
-    const { startDate, endDate } = getDateRange();
-
     buildPlotlyBody();
 
     for (const [variable, config] of Object.entries(PLOT_CONFIG)) {
-        if (config.visible === false) continue;  // Skip hidden plots
-
-        const data = await getReportData(variable, observatoryId, startDate, endDate);
-        Plotly.newPlot(variable, buildTraces(config, data), buildLayout(config, [toDateStr(startDate), toDateStr(endDate)], config.showXAxis), {
-            displayModeBar: false,
-            responsive: true,
-        });
+        if (config.visible === false) continue;
+        await renderPlot(variable, config, observatoryId);
     }
 }
 

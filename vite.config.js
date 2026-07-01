@@ -6,9 +6,16 @@ export default defineConfig({
         sourcemap: true,
     },
     server: {
+        // proxy: {
+        //     '/api2': {
+        //         target: 'http://localhost:8080',
+        //         changeOrigin: true,
+        //         secure: false,
+        //     },
+        // },
         proxy: {
             '/api2': {
-                target: 'http://localhost:8080',
+                target: 'https://hydroiowa.org',
                 changeOrigin: true,
                 secure: false,
             },

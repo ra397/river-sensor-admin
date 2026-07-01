@@ -96,6 +96,10 @@
       "method": "GET",
       "endpoint": "/reports/:variable/:observatoryId"
     },
+    "battery-report": {
+      "method": "GET",
+      "endpoint": "/reports/battery/:observatoryId/:years"
+    },
     "login": {
       "method": "POST",
       "endpoint": "/login"

@@ -216,6 +216,12 @@ export async function getReportData(variable, observatoryId, startDate, endDate)
     });
 }
 
+export async function getBatteryReportData(observatoryId, years) {
+    return request('battery-report', {
+        pathParams: { observatoryId, years },
+    });
+}
+
 export async function changeSamplingRates(sensorIds, samplingRate) {
     return request('change_sampling_rates', {
         body: {
