@@ -10,7 +10,7 @@ export function openSamplingRateModal() {
     const confirmMessage = modal.querySelector('.confirm-message');
     const cancelBtn = modal.querySelector('.cancel-btn');
     const approveBtn = modal.querySelector('.approve-btn');
-    const input = modal.querySelector('input[name="sampling_rate"]');
+    const input = modal.querySelector('select[name="sampling_rate"]');
     const modalBody = modal.querySelector('.modal-body');
     const modalActions = modal.querySelector('.modal-actions');
 
