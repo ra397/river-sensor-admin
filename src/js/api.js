@@ -250,6 +250,11 @@ export async function getUserData(id) {
     return users.find(user => user.id === id);
 }
 
+export async function getUserPermissions(email) {
+    const users = await request('users');
+    return users.find(user => user.email === email)?.permissions ?? [];
+}
+
 export async function updateUserPermissions(id, permissions) {
     return request('update_user_permissions', { pathParams: { id }, body: permissions });
 }

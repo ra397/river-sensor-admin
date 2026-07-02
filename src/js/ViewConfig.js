@@ -15,8 +15,8 @@ export const VIEWS = {
     observatories: {
         title: 'Bridges',
         actions: [
-            { label: 'Create Bridge', handler: () => populateModal('observatories', 'create') },
-            { label: 'Change Sampling Rate', handler: () => openSamplingRateModal() }
+            { label: 'Create Bridge', handler: () => populateModal('observatories', 'create'), permission: 'create_bridge' },
+            { label: 'Change Sampling Rate', handler: () => openSamplingRateModal(), permission: 'update_sensor' }
         ],
         modal: {
             create: { title: 'Create Bridge', method: createNewObservatory },
@@ -69,6 +69,7 @@ export const VIEWS = {
                         <path d="M6 16L5 19L8 18L17.5 8.5L15.5 5.5L6 16Z" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>`,
                     handler: () => openModal('observatories'),
+                    permission: 'update_bridge',
                 },
                 {
                     icon: `<svg class="row-action-btn" width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -84,7 +85,7 @@ export const VIEWS = {
     sensors: {
         title: 'Sensors',
         actions: [
-            { label: 'Create Sensor', handler: () => populateModal('sensors', 'create'), }
+            { label: 'Create Sensor', handler: () => populateModal('sensors', 'create'), permission: 'create_sensor' },
         ],
         filters: {
             status:       { label: 'Status',         type: 'includes',         options: ['Show All', 'active', 'maintenance', 'decommissioned'] },
@@ -121,6 +122,7 @@ export const VIEWS = {
                         <path d="M6 16L5 19L8 18L17.5 8.5L15.5 5.5L6 16Z" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>`,
                     handler: () => openModal('sensors'),
+                    permission: 'update_sensor',
                 }
             ]
         }
@@ -169,7 +171,7 @@ export const VIEWS = {
 
     users: {
         title: 'Users',
-        actions: [{ label: 'Add User', handler: () => populateModal('users', 'create') }],
+        actions: [{ label: 'Add User', handler: () => populateModal('users', 'create'), permission: 'manage_permissions' }],
         filters: {},
         modal: {
             create: { title: 'Add User', method: createUser },
@@ -193,6 +195,7 @@ export const VIEWS = {
                       <path d="M6 16L5 19L8 18L17.5 8.5L15.5 5.5L6 16Z" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                   </svg>`,
                     handler: () => openModal('users'),
+                    permission: 'manage_permissions',
                 }
             ]
         }

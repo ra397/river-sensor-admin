@@ -33,7 +33,17 @@ function renderNavbar(viewKey) {
 function renderActionButtons(view) {
     const container = document.querySelector('#nav-action-btns');
     container.innerHTML = '';
-    for (const action of view.actions) {
+
+
+    const perms = JSON.parse(sessionStorage.getItem("user-permissions")) || {};
+
+    const visibleActions = view.actions.filter(a =>
+        !a.permission || perms[a.permission]
+    );
+
+    console.log("Visible actions:", visibleActions);
+
+    for (const action of visibleActions) {
         const btn = document.createElement('button');
         btn.classList.add('btn');
         btn.classList.add('open-btn');
@@ -113,7 +123,12 @@ function renderRowActionButtons(view) {
     facade.textContent = '...';
     wrapper.appendChild(facade);
 
-    for (const action of view.rowActions.buttons) {
+    const perms = JSON.parse(sessionStorage.getItem("user-permissions")) || {};
+    const visibleButtons = view.rowActions.buttons.filter(b =>
+        !b.permission || perms[b.permission]
+    );
+
+    for (const action of visibleButtons) {
         const btn = document.createElement('span');
         btn.className = 'action-btn action-child';
         btn.innerHTML = action.icon;

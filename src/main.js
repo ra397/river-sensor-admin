@@ -2,6 +2,7 @@ import { renderView } from "./js/ViewManager.js";
 import {VIEWS} from "./js/ViewConfig.js";
 import {isAuthenticated, login, logout, requestOneTimeCode, submitNewPassword} from './js/auth.js';
 import './js/plotly.js';
+import { getUserPermissions } from "./js/api.js";
 
 const loginPage = document.querySelector('#login-container');
 const forgotPasswordPage = document.querySelector('#forgot-password-container');
@@ -53,6 +54,8 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
         await initApp();
 
         sessionStorage.setItem('user-email', email);
+        const permission = await getUserPermissions(email);
+        sessionStorage.setItem('user-permissions', JSON.stringify(permission));
     } catch {
         alert('Invalid email or password');
     }
@@ -107,6 +110,9 @@ document.getElementById('reset-password-btn').addEventListener('click', async ()
 if (isAuthenticated()) {
     showApp();
     await initApp();
+    const email = sessionStorage.getItem('user-email');
+    const permissions = await getUserPermissions(email);
+    sessionStorage.setItem('user-permissions', JSON.stringify(permissions));
 } else {
     showLogin();
 }
