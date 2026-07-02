@@ -50,12 +50,11 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
     const password = document.getElementById('login-password').value;
     try {
         await login(email, password);
-        showApp();
-        await initApp();
-
         sessionStorage.setItem('user-email', email);
         const permission = await getUserPermissions(email);
         sessionStorage.setItem('user-permissions', JSON.stringify(permission));
+        showApp();
+        await initApp();
     } catch {
         alert('Invalid email or password');
     }
@@ -64,6 +63,8 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
 // Logout handler
 document.getElementById('logout-btn').addEventListener('click', () => {
     logout();
+    sessionStorage.removeItem('user-permissions');
+    sessionStorage.removeItem('user-email');
     showLogin();
 });
 

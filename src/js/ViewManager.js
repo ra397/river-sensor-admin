@@ -159,7 +159,7 @@ export function renderView(viewKey, tableData) {
     const view = VIEWS[viewKey];
     if (!view) return;
 
-    if (previousView === viewKey) return;
+    // if (previousView === viewKey) return;
     previousView = viewKey;
 
     renderNavbar(viewKey);
