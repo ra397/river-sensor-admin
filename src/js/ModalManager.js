@@ -86,6 +86,15 @@ export async function populateModal(viewKey, mode, data = {}, id = null) {
         }
     }
 
+    if (data.roles) {
+        for (const role of data.roles) {
+            const checkbox = modal.querySelector(`.modal-input[name="${role}"]`);
+            if (checkbox && checkbox.type === 'checkbox') {
+                checkbox.checked = true;
+            }
+        }
+    }
+
     // Create submit based on mode
     const submitBtn = modal.querySelector('.submit-btn');
     submitBtn.textContent = mode === 'edit' ? 'Save' : 'Submit';
@@ -94,7 +103,6 @@ export async function populateModal(viewKey, mode, data = {}, id = null) {
     // Enable submit when form differs from initial
     const inputHandler = () => {
         const diff = getDiff(initialData, getFormData(modal));
-        console.log(diff);
         submitBtn.disabled = Object.keys(diff).length === 0;
     };
     modal.addEventListener('input', inputHandler);
@@ -185,6 +193,7 @@ function getFormData(card) {
     const data = {};
     const permissions = {};
     const permissionFields = ['create_bridge', 'update_bridge', 'create_sensor', 'update_sensor', 'sync_fields', 'manage_permissions'];
+    const roles = [];
 
     card.querySelectorAll('.modal-input').forEach(input => {
         if (input.closest('[data-mode].hidden')) return;
@@ -202,26 +211,38 @@ function getFormData(card) {
         if (permissionFields.includes(name)) {
             permissions[name] = value;
         } else {
-            data[name] = value;
+            if (name !== "maintenance" && name !== "development") data[name] = value;
+        }
+
+        if (name === "maintenance" && value === true) {
+            roles.push("maintenance");
+            data['roles'] = roles;
+        }
+        if (name === "development" && value === true) {
+            roles.push("development");
+            data['roles'] = roles;
         }
     });
 
     if (Object.keys(permissions).length > 0) {
-        data.permissions = permissions;
+        Object.assign(data, permissions);
     }
-
     return data;
 }
 
 function getDiff(initial, current) {
     const diff = {};
     for (const key of Object.keys(current)) {
-        const initialVal = initial[key];
+        let initialVal = initial[key];
         const currentVal = current[key];
 
         if (typeof currentVal === 'boolean') {
+            if (initialVal === undefined) {
+                initialVal = false;
+            }
             if (currentVal !== initialVal) {
                 diff[key] = currentVal;
+                console.log(key, currentVal, initialVal);
             }
         } else {
             // Normalize both values: null/undefined become empty string for comparison
