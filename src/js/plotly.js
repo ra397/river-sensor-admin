@@ -36,7 +36,7 @@ const PLOT_CONFIG = {
         title: 'Packet Count',
         yaxis: 'Count',
         traces: [
-            { key: 'pkt_cnt', xKey: 'dt', name: 'Packet Count', mode: 'markers', color: 'blue' }
+            { key: 'pkt_cnt', xKey: 'dt', name: 'Packet Count', mode: 'markers', color: 'blue', markerSize: 3 }
         ],
         showXAxis: false,
         visible: true,
@@ -45,9 +45,9 @@ const PLOT_CONFIG = {
         title: 'Battery',
         yaxis: 'Voltage (V)',
         traces: [
-            { key: 'avg', xKey: 'dt', name: 'Average', mode: 'lines+markers', color: 'blue' },
-            { key: 'max', xKey: 'dt', name: 'Max', mode: 'lines+markers', color: 'green' },
-            { key: 'min', xKey: 'dt', name: 'Min', mode: 'lines+markers', color: 'red' }
+            { key: 'avg', xKey: 'dt', name: 'Average', mode: 'markers', color: 'blue', markerSize: 3  },
+            { key: 'max', xKey: 'dt', name: 'Max', mode: 'markers', color: 'green', markerSize: 3  },
+            { key: 'min', xKey: 'dt', name: 'Min', mode: 'markers', color: 'red', markerSize: 3  }
         ],
         showXAxis: false,
         visible: true,
@@ -59,7 +59,7 @@ const PLOT_CONFIG = {
         title: 'Measurements',
         yaxis: 'Value',
         traces: [
-            { key: 'primary', xKey: 'validtime', name: 'Primary', mode: 'markers', color: 'blue' }
+            { key: 'primary', xKey: 'validtime', name: 'Primary', mode: 'markers', color: 'blue', markerSize: 3 }
         ],
         showXAxis: true,
         visible: true,
@@ -68,9 +68,9 @@ const PLOT_CONFIG = {
         title: 'Moisture',
         yaxis: 'Moisture (%)',
         traces: [
-            { key: 'avg', xKey: 'dt', name: 'Average', mode: 'lines+markers', color: 'blue' },
-            { key: 'max', xKey: 'dt', name: 'Max', mode: 'lines+markers', color: 'green' },
-            { key: 'min', xKey: 'dt', name: 'Min', mode: 'lines+markers', color: 'red' }
+            { key: 'avg', xKey: 'dt', name: 'Average', mode: 'lines+markers', color: 'blue', markerSize: 3 },
+            { key: 'max', xKey: 'dt', name: 'Max', mode: 'lines+markers', color: 'green', markerSize: 3 },
+            { key: 'min', xKey: 'dt', name: 'Min', mode: 'lines+markers', color: 'red', markerSize: 3 }
         ],
         showXAxis: true,
         visible: true,
@@ -130,7 +130,8 @@ function buildTraces(config, data) {
         type: 'scatter',
         mode: t.mode,
         name: t.name,
-        line: { color: t.color, ...(t.dash && { dash: t.dash }) }
+        line: { color: t.color, ...(t.dash && { dash: t.dash }) },
+        marker: { size: t.markerSize ?? 6, color: t.color },
     }));
 }
 
