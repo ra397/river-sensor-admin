@@ -1,0 +1,73 @@
+/* Full-screen dimmed backdrop that centers the modal */
+.confirm-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+/* The modal card */
+.confirm-modal {
+    background: #fff;
+    width: 90%;
+    max-width: 360px;
+    padding: 24px;
+    border-radius: 8px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+    font-family: inherit;
+}
+
+/* Message text */
+.confirm-message {
+    margin: 0 0 20px;
+    font-size: 15px;
+    line-height: 1.5;
+    color: #1f2937;
+}
+
+/* Button row, right-aligned */
+.confirm-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+/* Shared button base */
+.confirm-actions button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+/* Neutral cancel button */
+.confirm-cancel {
+    background: #e5e7eb;
+    color: #1f2937;
+}
+
+.confirm-cancel:hover {
+    background: #d1d5db;
+}
+
+/* Destructive confirm button */
+.confirm-ok {
+    background: #dc2626;
+    color: #fff;
+}
+
+.confirm-ok:hover {
+    background: #b91c1c;
+}
+
+/* Keyboard focus visibility */
+.confirm-actions button:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
+}

@@ -92,6 +92,10 @@
       "method": "PUT",
       "endpoint": "/users/:id/permissions"
     },
+    "delete_user": {
+      "method": "DELETE",
+      "endpoint": "/users/:id"
+    },
     "report": {
       "method": "GET",
       "endpoint": "/reports/:variable/:observatoryId"

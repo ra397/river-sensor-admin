@@ -114,7 +114,7 @@ function renderColumnToggles(view) {
     }
 }
 
-function renderRowActionButtons(view) {
+function renderRowActionButtons(view, rowData) {
     const wrapper = document.createElement('div');
     wrapper.className = 'action-btn-wrapper';
 
@@ -124,17 +124,20 @@ function renderRowActionButtons(view) {
     wrapper.appendChild(facade);
 
     const perms = JSON.parse(sessionStorage.getItem("user-permissions")) || {};
-    const visibleButtons = view.rowActions.buttons.filter(b =>
-        !b.permission || perms[b.permission]
-    );
+    const currentUserEmail = sessionStorage.getItem("user-email");
+
+    const visibleButtons = view.rowActions.buttons.filter(b => {
+        if (b.permission && !perms[b.permission]) return false;
+        return !(typeof b.hidden === 'function' && b.hidden(rowData, currentUserEmail));
+    });
 
     for (const action of visibleButtons) {
         const btn = document.createElement('span');
         btn.className = 'action-btn action-child';
         btn.innerHTML = action.icon;
-        btn.addEventListener('click',(e) => {
+        btn.addEventListener('click', (e) => {
             // e.stopPropagation();
-            action.handler();
+            action.handler(rowData, { table, view });
         });
         wrapper.appendChild(btn);
     }
@@ -180,7 +183,9 @@ export function renderView(viewKey, tableData) {
             if (existing) existing.remove();
 
             const cellEl = row.getCell(view.rowActions.column).getElement();
-            cellEl.appendChild(renderRowActionButtons(view));
+
+            console.log(row.getData());
+            cellEl.appendChild(renderRowActionButtons(view, row.getData()));
 
             const isModalOpen = document.querySelector(`#${view.modal.templateId}`).classList.contains('open');
             const isReportOpen = document.querySelector('#plotly-container').classList.contains('open');

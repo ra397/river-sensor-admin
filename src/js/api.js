@@ -258,3 +258,7 @@ export async function getUserPermissions(email) {
 export async function updateUserPermissions(id, permissions) {
     return request('update_user_permissions', { pathParams: { id }, body: permissions });
 }
+
+export async function deleteUser(id) {
+    return request('delete_user', { pathParams: { id } });
+}

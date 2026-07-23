@@ -5,11 +5,12 @@ import {
     getSensorOptions,
     getObservatoryData, getSensorData,
     createNewObservatory, editObservatory, createNewSensor, editSensor, createNewTicket, editTicket, getTicketData,
-    getMaintenanceCrew, getUsersTableData, getUserData, updateUserPermissions, createUser
+    getMaintenanceCrew, getUsersTableData, getUserData, updateUserPermissions, createUser, deleteUser
 } from "./api.js";
 import { datetimeNow, openModal, populateModal } from "./ModalManager.js";
 import { showPlotly } from "./plotly.js";
 import { openSamplingRateModal } from "./SamplingRateModal.js";
+import {confirmDeleteUser} from "./confirm.js";
 
 export const VIEWS = {
     observatories: {
@@ -191,11 +192,20 @@ export const VIEWS = {
             buttons: [
                 {
                     icon: `<svg class="row-action-btn" width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M15.5 5.5L18.5 8.5" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                      <path d="M6 16L5 19L8 18L17.5 8.5L15.5 5.5L6 16Z" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>`,
+                              <path d="M15.5 5.5L18.5 8.5" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                              <path d="M6 16L5 19L8 18L17.5 8.5L15.5 5.5L6 16Z" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>`,
                     handler: () => openModal('users'),
                     permission: 'manage_permissions',
+                },
+                {
+                    icon: `<svg class='row-action-btn' fill="#000" width="1em" height="1em" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+                                <path class="clr-i-outline clr-i-outline-path-1" d="M27.14,34H8.86A2.93,2.93,0,0,1,6,31V11.23H8V31a.93.93,0,0,0,.86,1H27.14A.93.93,0,0,0,28,31V11.23h2V31A2.93,2.93,0,0,1,27.14,34Z"></path><path class="clr-i-outline clr-i-outline-path-2" d="M30.78,9H5A1,1,0,0,1,5,7H30.78a1,1,0,0,1,0,2Z"></path><rect class="clr-i-outline clr-i-outline-path-3" x="21" y="13" width="2" height="15"></rect><rect class="clr-i-outline clr-i-outline-path-4" x="13" y="13" width="2" height="15"></rect><path class="clr-i-outline clr-i-outline-path-5" d="M23,5.86H21.1V4H14.9V5.86H13V4a2,2,0,0,1,1.9-2h6.2A2,2,0,0,1,23,4Z"></path>
+                                <rect x="0" y="0" width="1em" height="1em" fill-opacity="0"/>
+                            </svg>`,
+                    handler: async (rowData, ctx) => await confirmDeleteUser(rowData.id, ctx),
+                    permission: 'manage_permissions',
+                    hidden: (row, currentUserEmail) => row?.email === currentUserEmail,
                 }
             ]
         }
