@@ -119,7 +119,7 @@ function buildFilterFunc() {
 function matchesToolFilter(data, selectedTools) {
     for (const tool of selectedTools) {
         if (tool === 'Ticket' && data.tickets && data.tickets.length > 0) return true;
-        if (tool === 'Public Note' && data.public_note != null) return true;
+        // if (tool === 'Public Note' && data.public_note != null) return true;
     }
     return false;
 }

@@ -36,7 +36,7 @@ export const VIEWS = {
             // firmware:     { label: 'Firmware',       type: 'includes',         options: ['Show All', '0.6', '0.86', '0.88', '0.89', '0.90', '1.00', '1.01', '6.1'] },
             no_pckt_days: { label: 'No Packet Days', type: 'range',            options: ['Show All', '< 7', '7 - 14', '> 14'] },
             voltage:      { label: 'Voltage',        type: 'range',            options: ['Show All', '< 11.76', '11.76 - 12.07', '12.07 - 12.41', '12.41 - 12.64', '> 12.64'] },
-            tools:        { label: 'Tools',          type: 'includes',         options: ['Show All', 'Ticket', 'Public Note'] },
+            tools:        { label: 'Tools',          type: 'includes',         options: ['Show All', 'Ticket'/*, 'Public Note'*/] },
         },
         columns: [
             {title: 'id', field: 'id', visible: false},

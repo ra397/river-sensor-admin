@@ -111,7 +111,7 @@ export async function getObservatoryTableData() {
             wet: wetnessMap.get(obs.oid) ?? '',
             misread: misread ? `${misread.percent}/${misread.lastRead}` : '',
             voltage: obs.sid ? voltageMap.get(obs.sid) ?? '' : '',
-            public_note: obs.public_note ?? null,
+            // public_note: obs.public_note ?? null,
             tickets: ticketsMap.get(obs.name) ?? [],
         };
     });
