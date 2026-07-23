@@ -16,8 +16,9 @@ function hidePlotly() {
 
 plotlyCloseBtn.addEventListener('click', hidePlotly);
 
-function getDateRange(yearsBack = 1) {
+function getDateRange(yearsBack = 1, extraDaysEnd = 0) {
     const endDate = new Date();
+    endDate.setDate(endDate.getDate() + extraDaysEnd);
     const startDate = new Date();
     startDate.setFullYear(startDate.getFullYear() - yearsBack);
 
@@ -191,7 +192,8 @@ async function renderPlot(variable, config, observatoryId) {
     const { startDate, endDate } = getDateRange(yearsBack);
 
     // Determine plot range (forces battery to only show 1 year)
-    const plotRangeDates = getDateRange(plotYearsBack);
+    // Pad the end by a day so the "today" line isn't flush against the right edge
+    const plotRangeDates = getDateRange(plotYearsBack, 7);
 
     const data = config.yearsApi
         ? await getBatteryReportData(observatoryId, yearsBack)
