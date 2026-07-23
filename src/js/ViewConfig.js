@@ -33,7 +33,7 @@ export const VIEWS = {
         filters: {
             status:       { label: 'Status',         type: 'includes',         options: ['Show All', 'active', 'defective', 'suspended', 'retired'] },
             rate:         { label: 'Rate',           type: 'includes',         options: ['Show All', '2', '3', '4', '5'] },
-            firmware:     { label: 'Firmware',       type: 'includes',         options: ['Show All', '0.6', '0.86', '0.88', '0.89', '0.90', '1.00', '1.01', '6.1'] },
+            // firmware:     { label: 'Firmware',       type: 'includes',         options: ['Show All', '0.6', '0.86', '0.88', '0.89', '0.90', '1.00', '1.01', '6.1'] },
             no_pckt_days: { label: 'No Packet Days', type: 'range',            options: ['Show All', '< 7', '7 - 14', '> 14'] },
             voltage:      { label: 'Voltage',        type: 'range',            options: ['Show All', '< 10', '10 - 11', '11 - 12', '12 - 13', '> 13'] },
             tools:        { label: 'Tools',          type: 'includes',         options: ['Show All', 'Ticket', 'Public Note'] },
@@ -41,7 +41,7 @@ export const VIEWS = {
         columns: [
             {title: 'id', field: 'id', visible: false},
             {title: "Name", field: "name", width: 160},
-            {title: "NWSLI", field: "nwsli"},
+            // {title: "NWSLI", field: "nwsli"},
             {title: "Status", field: "status"},
             {title: "Sensor", field: "sensor"},
             {title: "River", field: "river"},
@@ -49,7 +49,7 @@ export const VIEWS = {
             {title: "Lat/Lng", field: "gps"},
             {title: "Rate", field: "rate", sorter: "number"},
             {title: "Voltage", field: "voltage", sorter: "number"},
-            {title: "Firmware", field: "firmware", sorter: "number"},
+            // {title: "Firmware", field: "firmware", sorter: "number"},
             {title: "Date", field: "date",
                 sorter: function(a, b) {
                     return new Date(a).getTime() - new Date(b).getTime();
@@ -83,51 +83,51 @@ export const VIEWS = {
         }
     },
 
-    sensors: {
-        title: 'Sensors',
-        actions: [
-            { label: 'Create Sensor', handler: () => populateModal('sensors', 'create'), permission: 'create_sensor' },
-        ],
-        filters: {
-            status:       { label: 'Status',         type: 'includes',         options: ['Show All', 'active', 'maintenance', 'decommissioned'] },
-            rate:         { label: 'Rate',           type: 'includes',         options: ['Show All', '2', '3', '4', '5'] },
-            firmware:     { label: 'Firmware',       type: 'includes',         options: ['Show All', '0.6', '0.86', '0.88', '0.89', '0.90', '1.00', '1.01', '6.1'] },
-        },
-        modal: {
-            create: { title: 'Create Sensor', method: createNewSensor },
-            edit:   { title: 'Edit Sensor',   method: editSensor },
-            templateId: 'sensor',
-            prefill: {
-                statusOptions: ['', 'active', 'maintenance', 'decommissioned'],
-                datetimeNow: datetimeNow,
-            },
-        },
-        columns: [
-            {title: 'id', field: 'id', visible: false},
-            {title: "Sensor", field: "id", width: 116},
-            {title: "Status", field: "status"},
-            {title: "Firmware", field: "firmware"},
-            {title: "IMEI", field: "imei"},
-            {title: "Rate", field: "rate"},
-            {title: "Creation Date", field: "creationDate"},
-            {title: "Retirement Date", field: "retirementDate"},
-        ],
-        getData: getSensorTableData,
-        getRowData: (id) => getSensorData(id),
-        rowActions: {
-            column: 'id',
-            buttons: [
-                {
-                    icon: `<svg class="row-action-btn" width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M15.5 5.5L18.5 8.5" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M6 16L5 19L8 18L17.5 8.5L15.5 5.5L6 16Z" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>`,
-                    handler: () => openModal('sensors'),
-                    permission: 'update_sensor',
-                }
-            ]
-        }
-    },
+    // sensors: {
+    //     title: 'Sensors',
+    //     actions: [
+    //         { label: 'Create Sensor', handler: () => populateModal('sensors', 'create'), permission: 'create_sensor' },
+    //     ],
+    //     filters: {
+    //         status:       { label: 'Status',         type: 'includes',         options: ['Show All', 'active', 'maintenance', 'decommissioned'] },
+    //         rate:         { label: 'Rate',           type: 'includes',         options: ['Show All', '2', '3', '4', '5'] },
+    //         // firmware:     { label: 'Firmware',       type: 'includes',         options: ['Show All', '0.6', '0.86', '0.88', '0.89', '0.90', '1.00', '1.01', '6.1'] },
+    //     },
+    //     modal: {
+    //         create: { title: 'Create Sensor', method: createNewSensor },
+    //         edit:   { title: 'Edit Sensor',   method: editSensor },
+    //         templateId: 'sensor',
+    //         prefill: {
+    //             statusOptions: ['', 'active', 'maintenance', 'decommissioned'],
+    //             datetimeNow: datetimeNow,
+    //         },
+    //     },
+    //     columns: [
+    //         {title: 'id', field: 'id', visible: false},
+    //         {title: "Sensor", field: "id", width: 116},
+    //         {title: "Status", field: "status"},
+    //         {title: "Firmware", field: "firmware"},
+    //         {title: "IMEI", field: "imei"},
+    //         {title: "Rate", field: "rate"},
+    //         {title: "Creation Date", field: "creationDate"},
+    //         {title: "Retirement Date", field: "retirementDate"},
+    //     ],
+    //     getData: getSensorTableData,
+    //     getRowData: (id) => getSensorData(id),
+    //     rowActions: {
+    //         column: 'id',
+    //         buttons: [
+    //             {
+    //                 icon: `<svg class="row-action-btn" width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    //                     <path d="M15.5 5.5L18.5 8.5" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    //                     <path d="M6 16L5 19L8 18L17.5 8.5L15.5 5.5L6 16Z" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    //                 </svg>`,
+    //                 handler: () => openModal('sensors'),
+    //                 permission: 'update_sensor',
+    //             }
+    //         ]
+    //     }
+    // },
 
     tickets: {
         title: 'Tickets',
