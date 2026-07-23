@@ -253,9 +253,9 @@ function getDiff(initial, current) {
             }
         }
     }
-    if (current?.['sync_ifis']) {
-        diff['status'] = current['status'];
-    }
+    // if (current?.['sync_ifis']) {
+    //     diff['status'] = current['status'];
+    // }
     return diff;
 }
 
