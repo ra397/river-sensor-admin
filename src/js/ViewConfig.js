@@ -24,7 +24,7 @@ export const VIEWS = {
             edit:   { title: 'Edit Bridge',   method: editObservatory },
             templateId: 'observatory',
             prefill: {
-                stateOptions: ['', "IA", "IL", "WA", "CO"],
+                stateOptions: ['', "ND"],
                 statusOptions: ['', 'active', 'defective', 'suspended', 'retired'],
                 sensorOptions: getSensorOptions,
                 upDownOptions: ['', 'U', 'D'],
