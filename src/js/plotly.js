@@ -64,6 +64,7 @@ const PLOT_CONFIG = {
         ],
         showXAxis: true,
         visible: true,
+        yTickFormat: 'd',
     },
     'moisture': {
         title: 'Moisture',
@@ -141,7 +142,7 @@ function buildLayout(config, range, showXAxis = true) {
     const now = new Date();
     return {
         margin: {
-            l: 35,  // Left margin (px)
+            l: 45,  // Left margin (px)
             r: 25,  // Right margin (px)
             b: 25,  // Bottom margin (px)
             t: 25,  // Top margin (px)
@@ -174,6 +175,7 @@ function buildLayout(config, range, showXAxis = true) {
             title: config.yaxis,
             showline: true,
             linecolor: 'black',
+            tickformat: config.yTickFormat,
         },
         legend: {
             x: 0.01,
