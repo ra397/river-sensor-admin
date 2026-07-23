@@ -41,8 +41,6 @@ function renderActionButtons(view) {
         !a.permission || perms[a.permission]
     );
 
-    console.log("Visible actions:", visibleActions);
-
     for (const action of visibleActions) {
         const btn = document.createElement('button');
         btn.classList.add('btn');
@@ -184,7 +182,6 @@ export function renderView(viewKey, tableData) {
 
             const cellEl = row.getCell(view.rowActions.column).getElement();
 
-            console.log(row.getData());
             cellEl.appendChild(renderRowActionButtons(view, row.getData()));
 
             const isModalOpen = document.querySelector(`#${view.modal.templateId}`).classList.contains('open');
