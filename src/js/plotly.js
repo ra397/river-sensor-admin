@@ -80,11 +80,11 @@ const PLOT_CONFIG = {
 };
 
 function buildPlotlyToggles() {
-    const container = document.querySelector('#plotly-container .toggle-container');
+    const container = document.querySelector('#plotly-container .plot-toggle-container');
 
     for (const [variable, config] of Object.entries(PLOT_CONFIG)) {
         const toggleItem = document.createElement('span');
-        toggleItem.className = 'toggle-item';
+        toggleItem.className = 'plot-toggle-item';
         toggleItem.dataset.plot = variable;
         toggleItem.textContent = config.title;
 
@@ -143,7 +143,7 @@ function buildLayout(config, range, showXAxis = true) {
     return {
         margin: {
             l: 45,  // Left margin (px)
-            r: 25,  // Right margin (px)
+            r: 0,  // Right margin (px)
             b: 25,  // Bottom margin (px)
             t: 25,  // Top margin (px)
             pad: 4  // Padding between the plotting area and the axis lines (px)
@@ -195,7 +195,7 @@ async function renderPlot(variable, config, observatoryId) {
 
     // Determine plot range (forces battery to only show 1 year)
     // Pad the end by a day so the "today" line isn't flush against the right edge
-    const plotRangeDates = getDateRange(plotYearsBack, 7);
+    const plotRangeDates = getDateRange(plotYearsBack, 14);
 
     const data = config.yearsApi
         ? await getBatteryReportData(observatoryId, yearsBack)
