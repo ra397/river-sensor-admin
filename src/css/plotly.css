@@ -20,3 +20,31 @@
 .plot.hidden {
     display: none;
 }
+
+.plot-toggle-container {
+    display: flex;
+    gap: 1em;
+}
+
+.plot-toggle-item,
+.plot-toggle-item.hidden {
+    font-size: 0.9em;
+    cursor: pointer;
+    user-select: none;
+    padding: 0 2ch;
+    line-height: 1.66em;
+    border-radius: 0.2em;
+    margin-top: 0.5em;
+    margin-bottom: -1em;
+    z-index: 1;
+}
+
+.plot-toggle-item {
+    background: var(--light-blue);
+    color: #fff;
+}
+
+.plot-toggle-item.hidden {
+    background: #f0f0f0;
+    color: #000;
+}
