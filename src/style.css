@@ -9,6 +9,7 @@
 @import url("css/plotly.css");
 @import url("css/rowActionBtns.css");
 @import url("css/confirm.css");
+@import url("css/toast.css");
 
 :root {
     --black: #000;

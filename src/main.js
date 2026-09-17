@@ -3,6 +3,7 @@ import {VIEWS} from "./js/ViewConfig.js";
 import {isAuthenticated, login, logout, requestOneTimeCode, submitNewPassword} from './js/auth.js';
 import './js/plotly.js';
 import { getUserPermissions } from "./js/api.js";
+import { showToast } from "./js/toast.js";
 
 const loginPage = document.querySelector('#login-container');
 const forgotPasswordPage = document.querySelector('#forgot-password-container');
@@ -56,7 +57,7 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
         showApp();
         await initApp();
     } catch {
-        alert('Invalid email or password');
+        showToast('Invalid email or password');
     }
 });
 
@@ -83,7 +84,7 @@ document.getElementById('get-otp-btn').addEventListener('click', async () => {
         await requestOneTimeCode(email);
         showNewPassword(email);
     } catch {
-        alert('Failed to send one-time code. Please try again.');
+        showToast('Failed to send one-time code. Please try again.');
     }
 });
 
@@ -94,16 +95,16 @@ document.getElementById('reset-password-btn').addEventListener('click', async ()
     const passwordConfirm = document.getElementById('reset-password-confirm').value;
 
     if (password !== passwordConfirm) {
-        alert('Passwords do not match.');
+        showToast('Passwords do not match.');
         return;
     }
 
     try {
         await submitNewPassword(email, oneTimeCode, password);
         showLogin();
-        alert("Successfully reset password");
+        showToast("Successfully reset password");
     } catch {
-        alert('Failed to reset password. Please try again.');
+        showToast('Failed to reset password. Please try again.');
     }
 });
 

@@ -1,6 +1,7 @@
 import { table } from "./table.js";
 import { changeSamplingRates, getObservatoryTableData } from "./api.js";
 import { refreshTable } from "./ViewManager.js";
+import { showToast } from "./toast.js";
 
 export function openSamplingRateModal() {
     const modal = document.getElementById('sampling-rate-modal');
@@ -41,7 +42,7 @@ export function openSamplingRateModal() {
             .filter(id => id);
 
         if (sensorIds.length === 0) {
-            alert('No sensors in the current filtered view.');
+            showToast('No sensors in the current filtered view.');
             return;
         }
 
