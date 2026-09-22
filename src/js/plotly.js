@@ -1,5 +1,5 @@
 import Plotly from 'plotly.js-dist-min';
-import {getBatteryReportData, getReportData} from './api.js';
+import { getBatteryReportData, getReportData } from './api.js';
 
 const plotlyContainerEl = document.querySelector('#plotly-container');
 const plotlyCloseBtn = plotlyContainerEl.querySelector('.modal-close');
@@ -200,6 +200,10 @@ async function renderPlot(variable, config, observatoryId) {
     const data = config.yearsApi
         ? await getBatteryReportData(observatoryId, yearsBack)
         : await getReportData(variable, observatoryId, startDate, endDate);
+
+    data.map(d => {
+        d.validtime = new Date(d.validtime);
+    })
 
     Plotly.newPlot(
         variable,
