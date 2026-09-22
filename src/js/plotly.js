@@ -33,22 +33,32 @@ function getDateRange(yearsBack = 1, extraDaysEnd = 0) {
 }
 
 const PLOT_CONFIG = {
+    'measurements': {
+        title: 'Measured',
+        yaxis: 'Value (cm)',
+        traces: [
+            { key: 'primary', xKey: 'validtime', name: 'Primary', mode: 'markers', type: 'scattergl', color: 'blue', markerSize: 3 }
+        ],
+        visible: true,
+    },
     'packet-count': {
-        title: 'Packet Count',
+        title: 'Packets',
         yaxis: 'Count',
         traces: [
-            { key: 'pkt_cnt', xKey: 'dt', name: 'Packet Count', mode: 'markers', type: 'scattergl', color: 'blue', markerSize: 3 }
+            { key: 'pkt_cnt', xKey: 'dt', name: 'Packet Count', mode: 'markers', type: 'scattergl', color: 'blue' }
         ],
+        yTickFormat: 'd',
+        yHoverFormat: 'd',
         showXAxis: false,
         visible: true,
     },
     'battery': {
-        title: 'Battery',
+        title: 'Voltage',
         yaxis: 'Voltage (V)',
         traces: [
-            { key: 'avg', xKey: 'dt', name: 'Average', mode: 'markers', type: 'scattergl', color: 'blue', markerSize: 3  },
-            { key: 'max', xKey: 'dt', name: 'Max', mode: 'markers', type: 'scattergl', color: 'green', markerSize: 3  },
-            { key: 'min', xKey: 'dt', name: 'Min', mode: 'markers', type: 'scattergl', color: 'red', markerSize: 3  }
+            { key: 'avg', xKey: 'dt', name: 'Average', mode: 'lines+markers', type: 'scattergl', color: 'blue' },
+            { key: 'max', xKey: 'dt', name: 'Max', mode: 'lines+markers', type: 'scattergl', color: 'green' },
+            { key: 'min', xKey: 'dt', name: 'Min', mode: 'lines+markers', type: 'scattergl', color: 'red' }
         ],
         showXAxis: false,
         visible: true,
@@ -56,23 +66,13 @@ const PLOT_CONFIG = {
         yearsBack: 3,     // history to request
         plotYearsBack: 1,
     },
-    'measurements': {
-        title: 'Measurements',
-        yaxis: 'Value',
-        traces: [
-            { key: 'primary', xKey: 'validtime', name: 'Primary', mode: 'markers', type: 'scattergl', color: 'blue', markerSize: 3 }
-        ],
-        showXAxis: true,
-        visible: true,
-        yTickFormat: 'd',
-    },
     'moisture': {
         title: 'Moisture',
         yaxis: 'Moisture (%)',
         traces: [
-            { key: 'avg', xKey: 'dt', name: 'Average', mode: 'lines+markers', type: 'scattergl', color: 'blue', markerSize: 3 },
-            { key: 'max', xKey: 'dt', name: 'Max', mode: 'lines+markers', type: 'scattergl', color: 'green', markerSize: 3 },
-            { key: 'min', xKey: 'dt', name: 'Min', mode: 'lines+markers', type: 'scattergl', color: 'red', markerSize: 3 }
+            { key: 'avg', xKey: 'dt', name: 'Average', mode: 'lines+markers', type: 'scattergl', color: 'blue' },
+            { key: 'max', xKey: 'dt', name: 'Max', mode: 'lines+markers', type: 'scattergl', color: 'green' },
+            { key: 'min', xKey: 'dt', name: 'Min', mode: 'lines+markers', type: 'scattergl', color: 'red' }
         ],
         showXAxis: true,
         visible: true,
@@ -140,11 +140,13 @@ function buildTraces(config, data) {
 
 function buildLayout(config, range, showXAxis = true) {
     const now = new Date();
+    now.setDate(now.getDate() + 1);
+    now.setHours(0, 0, 0, 0);
     return {
         margin: {
-            l: 45,  // Left margin (px)
-            r: 0,  // Right margin (px)
-            b: 25,  // Bottom margin (px)
+            l: 55,  // Left margin (px)
+            r: 25,  // Right margin (px)
+            b: 55,  // Bottom margin (px)
             t: 25,  // Top margin (px)
             pad: 4  // Padding between the plotting area and the axis lines (px)
         },
@@ -175,7 +177,8 @@ function buildLayout(config, range, showXAxis = true) {
             title: config.yaxis,
             showline: true,
             linecolor: 'black',
-            tickformat: config.yTickFormat,
+            tickformat: config.yTickFormat ?? '.1f',
+            hoverformat: config.yHoverFormat ?? '.2f',
         },
         legend: {
             x: 0.01,
